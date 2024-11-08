@@ -3,14 +3,14 @@ package edu.mephi.java.engine;
 import edu.mephi.java.engine.tiles.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Snake
 {
 	private SnakeHead head;
 	private SnakeTail tail;
 	private Field field;
+	private int length;
+	private int shield;
 	private EDirection headDirection;
 	private EDirection moveDirection;
 	private Timer blinkTimer;
@@ -23,6 +23,8 @@ public class Snake
 		this.field = field;
 		headDirection = direction;
 		moveDirection = direction;
+		this.length = length;
+		shield = 0;
 		
 		head = new SnakeHead(x, y, field, direction, length);
 		
@@ -54,12 +56,27 @@ public class Snake
 		return tail;
 	}
 	
+	public int getLength()
+	{
+		return length;
+	}
+	
+	public int getShield()
+	{
+		return shield;
+	}
+	
 	public void setDirection(EDirection direction)
 	{
 		if (direction != headDirection.getOpposite())
 		{
 			moveDirection = direction;
 		}
+	}
+	
+	public void setShield(int shield)
+	{
+		this.shield = shield;
 	}
 	
 	public void move()
@@ -87,6 +104,11 @@ public class Snake
 		else
 		{
 			move_(0);
+		}
+		
+		if (shield > 0)
+		{
+			shield--;
 		}
 	}
 	
@@ -127,10 +149,11 @@ public class Snake
 		if (deltaSize >= 1)
 		{
 			deltaSize = 1;
+			length++;
 		}
 		else if (deltaSize <= -1)
 		{
-			if (head.getNext().getNext() == tail)
+			if (length < 3)
 			{
 				field.getGame().lose();
 				deltaSize = 0;
@@ -138,6 +161,7 @@ public class Snake
 			else
 			{
 				deltaSize = -1;
+				length--;
 			}
 		}
 		
@@ -156,7 +180,7 @@ public class Snake
 	
 	private void move_(int deltaSize)
 	{
-		if (head.getNext() == tail || head.getNext().getNext() == tail)
+		if (length < 4)
 		{
 			moveHead();
 			moveTail(deltaSize);

@@ -11,7 +11,7 @@ public class Wall
 {
 	public Wall(int x, int y, Field field)
 	{
-		super(x, y, field, true);
+		super(x, y, field, 200, true);
 	}
 	
 	@Override

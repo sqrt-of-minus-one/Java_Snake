@@ -7,9 +7,9 @@ public abstract class Eatable
 {
 	private int deltaSize;
 	
-	public Eatable(int x, int y, Field field, int deltaSize)
+	public Eatable(int x, int y, Field field, int lifetime, int deltaSize)
 	{
-		super(x, y, field);
+		super(x, y, field, lifetime);
 		this.deltaSize = deltaSize;
 	}
 	

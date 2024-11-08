@@ -9,9 +9,11 @@ import javax.swing.*;
 public class Shield
 		extends Eatable
 {
+	public static final int SHIELD_DURATION = 25;
+	
 	public Shield(int x, int y, Field field)
 	{
-		super(x, y, field, 0);
+		super(x, y, field, 100, 0);
 	}
 	
 	@Override
@@ -23,5 +25,6 @@ public class Shield
 	@Override
 	public void eaten()
 	{
+		getField().getSnake().setShield(SHIELD_DURATION);
 	}
 }

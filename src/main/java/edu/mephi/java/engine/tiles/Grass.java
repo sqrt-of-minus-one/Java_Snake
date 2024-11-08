@@ -11,7 +11,7 @@ public class Grass
 {
 	public Grass(int x, int y, Field field)
 	{
-		super(x, y, field);
+		super(x, y, field, -1);
 	}
 	
 	@Override

@@ -6,7 +6,7 @@ public abstract class SnakeTile extends Tile
 {
 	public SnakeTile(int x, int y, Field field)
 	{
-		super(x, y, field);
+		super(x, y, field, -1);
 	}
 	
 	public abstract SnakeTile getPrevious();

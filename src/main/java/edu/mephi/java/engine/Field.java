@@ -64,6 +64,18 @@ public class Field
 		tiles[x][y] = tile;
 	}
 	
+	public void moveSnake()
+	{
+		snake.move();
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				tiles[x][y].onMove();
+			}
+		}
+	}
+	
 	public Tile getNextTile(Tile tile, EDirection direction)
 	{
 		return switch (direction)

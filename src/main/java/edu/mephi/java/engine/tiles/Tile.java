@@ -8,12 +8,14 @@ public abstract class Tile
 {
 	private int x, y;
 	private Field field;
+	private int lifetime;
 	
-	public Tile(int x, int y, Field field)
+	public Tile(int x, int y, Field field, int lifetime)
 	{
 		this.x = x;
 		this.y = y;
 		this.field = field;
+		this.lifetime = lifetime;
 	}
 	
 	public int getX()
@@ -35,6 +37,14 @@ public abstract class Tile
 	public Field getField()
 	{
 		return field;
+	}
+	
+	public void onMove()
+	{
+		if (lifetime >= 0 && --lifetime == 0)
+		{
+			field.setTile(x, y, new Grass(x, y, field));
+		}
 	}
 	
 	public Tile getNextTile(EDirection direction)

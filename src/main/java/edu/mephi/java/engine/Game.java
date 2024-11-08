@@ -28,13 +28,16 @@ public class Game
 	private static final int MOVE_TIME_MS = 500;
 	
 	private JLabel[][] labels;
+	private JLabel scoreIconLabel;
+	private JLabel[] scoreLabels;
+	private JLabel shieldIndicator;
 	
 	public Game()
 	{
 		field = new Field(WIDTH, HEIGHT, this);
 		
-		setLayout(new GridLayout(HEIGHT, WIDTH, 0, 0));
-		setPreferredSize(new Dimension(WIDTH * ResourceManager.FIELD_TILE_SIZE, HEIGHT * ResourceManager.FIELD_TILE_SIZE));
+		setLayout(new GridLayout(HEIGHT + 1, WIDTH, 0, 0));
+		setPreferredSize(new Dimension(WIDTH * ResourceManager.FIELD_TILE_SIZE, (HEIGHT + 1) * ResourceManager.FIELD_TILE_SIZE));
 		setAlignmentX(LEFT_ALIGNMENT);
 		setAlignmentY(TOP_ALIGNMENT);
 		setBackground(Color.DARK_GRAY);
@@ -84,9 +87,23 @@ public class Game
 			}
 		}
 		
+		scoreIconLabel = new JLabel(ResourceManager.getSprite(ESprite.APPLE));
+		add(scoreIconLabel);
+		scoreLabels = new JLabel[3];
+		for (int i = 0; i < scoreLabels.length; i++)
+		{
+			scoreLabels[i] = new JLabel(ResourceManager.getSprite(ESprite.NUM_ZERO));
+			add(scoreLabels[i]);
+		}
+		updateScore();
+		
+		shieldIndicator = new JLabel(ResourceManager.getSprite(ESprite.GRASS));
+		add(shieldIndicator);
+		updateShield();
+		
 		moveTimer = new Timer(MOVE_TIME_MS, e ->
 		{
-			field.getSnake().move();
+			field.moveSnake();
 			
 			updateSprites();
 			repaint();
@@ -108,6 +125,8 @@ public class Game
 				updateSprite(x, y);
 			}
 		}
+		updateScore();
+		updateShield();
 	}
 	
 	public void restart()
@@ -125,5 +144,20 @@ public class Game
 	public boolean isGameOver()
 	{
 		return gameOver;
+	}
+	
+	private void updateScore()
+	{
+		int score = field.getSnake().getLength() - 2;
+		for (int i = scoreLabels.length - 1; i >= 0; i--)
+		{
+			scoreLabels[i].setIcon(ResourceManager.getSprite(ESprite.getNum(score % 10)));
+			score /= 10;
+		}
+	}
+	
+	private void updateShield()
+	{
+		shieldIndicator.setIcon(ResourceManager.getSprite(field.getSnake().getShield() > 1 ? ESprite.SHIELD : ESprite.GRASS));
 	}
 }

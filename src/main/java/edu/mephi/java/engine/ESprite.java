@@ -18,5 +18,25 @@ public enum ESprite
 	SHIELD,
 	HAMMER,
 	
-	WALL
+	WALL,
+	
+	NUM_ZERO, NUM_ONE, NUM_TWO, NUM_THREE, NUM_FOUR, NUM_FIVE, NUM_SIX, NUM_SEVEN, NUM_EIGHT, NUM_NINE;
+	
+	public static ESprite getNum(int num)
+	{
+		return switch (num)
+		{
+			case 0 -> NUM_ZERO;
+			case 1 -> NUM_ONE;
+			case 2 -> NUM_TWO;
+			case 3 -> NUM_THREE;
+			case 4 -> NUM_FOUR;
+			case 5 -> NUM_FIVE;
+			case 6 -> NUM_SIX;
+			case 7 -> NUM_SEVEN;
+			case 8 -> NUM_EIGHT;
+			case 9 -> NUM_NINE;
+			default -> GRASS;
+		};
+	}
 }

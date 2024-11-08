@@ -15,7 +15,7 @@ public class ResourceManager
 	public static final int TEXTURE_TILE_SIZE = 8;
 	public static final int FIELD_TILE_SIZE = 64;
 	
-	private static Map<ESprite, ImageIcon> sprites;
+	private static final Map<ESprite, ImageIcon> sprites;
 	private static BufferedImage bufferedImage;
 	
 	public static ImageIcon getSprite(ESprite sprite)
@@ -76,6 +76,17 @@ public class ResourceManager
 		sprites.put(ESprite.SHIELD, createImage(6, 0));
 		sprites.put(ESprite.HAMMER, createImage(7, 0));
 		sprites.put(ESprite.WALL, createImage(3, 7));
+		
+		sprites.put(ESprite.NUM_ZERO, createImage(4, 5));
+		sprites.put(ESprite.NUM_ONE, createImage(5, 5));
+		sprites.put(ESprite.NUM_TWO, createImage(6, 5));
+		sprites.put(ESprite.NUM_THREE, createImage(7, 5));
+		sprites.put(ESprite.NUM_FOUR, createImage(4, 6));
+		sprites.put(ESprite.NUM_FIVE, createImage(5, 6));
+		sprites.put(ESprite.NUM_SIX, createImage(6, 6));
+		sprites.put(ESprite.NUM_SEVEN, createImage(7, 6));
+		sprites.put(ESprite.NUM_EIGHT, createImage(4, 7));
+		sprites.put(ESprite.NUM_NINE, createImage(5, 7));
 	}
 	
 	private static ImageIcon createImage(int x, int y)
