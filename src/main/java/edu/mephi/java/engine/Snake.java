@@ -95,10 +95,13 @@ public class Snake
 		field.lose();
 	}
 	
-	private void move_(int deltaSize)
+	private void moveHead()
 	{
 		head.move(moveDirection);
-		
+	}
+	
+	private void moveTail(int deltaSize)
+	{
 		SnakeTile oldTail = tail;
 		SnakeTile newTail = tail;
 		for (int i = 0; i < 1 - deltaSize; i++)
@@ -110,7 +113,20 @@ public class Snake
 		oldTail.setPrevious(newTail.getPrevious());
 		oldTail.getPrevious().setNext(oldTail);
 		field.setTile(newTail.getX(), newTail.getY(), oldTail);
-		
+	}
+	
+	private void move_(int deltaSize)
+	{
+		if (head.getNext() == tail)
+		{
+			moveHead();
+			moveTail(deltaSize);
+		}
+		else
+		{
+			moveTail(deltaSize);
+			moveHead();
+		}
 		headDirection = head.getDirection();
 	}
 }

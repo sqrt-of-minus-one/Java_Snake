@@ -2,14 +2,19 @@ package edu.mephi.java.engine;
 
 import edu.mephi.java.engine.tiles.*;
 
+import java.util.Random;
+
 public class Field
 {
+	public static final double BONUS_PROB = 0.4;
+	
 	private final int width;
 	private final int height;
 	
 	private Game game;
 	private Tile[][] tiles;
 	private Snake snake;
+	private Random random;
 	
 	public Field(int width, int height, Game game)
 	{
@@ -17,9 +22,11 @@ public class Field
 		this.height = height;
 		this.game = game;
 		tiles = new Tile[width][height];
+		random = new Random();
 		
 		fillGrass();
 		createSnake();
+		generateFood();
 	}
 	
 	public int getWidth()
@@ -73,9 +80,48 @@ public class Field
 		snake.move();
 	}
 	
+	public void generateFood()
+	{
+		replaceRandomGrass(new Apple(0, 0, this));
+		if (random.nextDouble() <= BONUS_PROB)
+		{
+			generateBonus();
+		}
+	}
+	
+	public void generateWall()
+	{
+		replaceRandomGrass(new Wall(0, 0, this));
+	}
+	
 	public void lose()
 	{
 		getGame().lose();
+	}
+	
+	private void replaceRandomGrass(Tile tileToReplace)
+	{
+		int x, y;
+		do
+		{
+			x = random.nextInt(width);
+			y = random.nextInt(height);
+		} while (!Grass.class.isAssignableFrom(tiles[x][y].getClass()));
+		tileToReplace.setXY(x, y);
+		tiles[x][y] = tileToReplace;
+	}
+	
+	private void generateBonus()
+	{
+		replaceRandomGrass(
+				switch (random.nextInt(4))
+				{
+					case 0 -> new RottenApple(0, 0, this);
+					case 1 -> new ReversePill(0, 0, this);
+					case 2 -> new Hammer(0, 0, this);
+					case 3 -> new Shield(0, 0, this);
+					default -> new Grass(0, 0, this);
+				});
 	}
 	
 	private void fillGrass()
@@ -93,7 +139,7 @@ public class Field
 	{
 		if (snake == null)
 		{
-			snake = new Snake(width / 2, height / 2, this, EDirection.DOWN, 4);
+			snake = new Snake(width / 2, height / 2, this, EDirection.DOWN, 2);
 			for (SnakeTile tile = snake.getHead(); tile != null; tile = tile.getNext())
 			{
 				tiles[tile.getX()][tile.getY()] = tile;

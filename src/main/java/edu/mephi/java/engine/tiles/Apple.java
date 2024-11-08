@@ -23,5 +23,6 @@ public class Apple
 	@Override
 	public void eaten()
 	{
+		getField().generateFood();
 	}
 }

@@ -23,5 +23,6 @@ public class Hammer
 	@Override
 	public void eaten()
 	{
+		getField().generateWall();
 	}
 }
