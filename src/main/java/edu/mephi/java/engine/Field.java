@@ -45,13 +45,11 @@ public class Field
 	public void moveTile(int fromX, int fromY, int toX, int toY)
 	{
 		tiles[toX][toY] = tiles[fromX][fromY];
-		game.updateSprite(toX, toY);
 	}
 	
 	public void setTile(int x, int y, Tile tile)
 	{
 		tiles[x][y] = tile;
-		game.updateSprite(x, y);
 	}
 	
 	public Tile getNextTile(Tile tile, EDirection direction)
@@ -63,6 +61,11 @@ public class Field
 			case LEFT	-> getTile(tile.getX() == 0 ? width - 1 : tile.getX() - 1, tile.getY());
 			case RIGHT	-> getTile(tile.getX() == width - 1 ? 0 : tile.getX() + 1, tile.getY());
 		};
+	}
+	
+	public void setDirection(EDirection direction)
+	{
+		snake.setDirection(direction);
 	}
 	
 	public void moveSnake()

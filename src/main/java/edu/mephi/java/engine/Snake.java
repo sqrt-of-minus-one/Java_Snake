@@ -54,6 +54,14 @@ public class Snake
 		return tail;
 	}
 	
+	public void setDirection(EDirection direction)
+	{
+		if (direction != headDirection.getOpposite())
+		{
+			moveDirection = direction;
+		}
+	}
+	
 	public void move()
 	{
 		Tile nextTile = field.getNextTile(head, moveDirection);
@@ -102,5 +110,7 @@ public class Snake
 		oldTail.setPrevious(newTail.getPrevious());
 		oldTail.getPrevious().setNext(oldTail);
 		field.setTile(newTail.getX(), newTail.getY(), oldTail);
+		
+		headDirection = head.getDirection();
 	}
 }

@@ -1,5 +1,7 @@
 package edu.mephi.java.engine;
 
+import edu.mephi.java.engine.tiles.EDirection;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -23,7 +25,7 @@ public class Game
 	private boolean gameOver = false;
 	private Timer moveTimer;
 	
-	private static final int MOVE_TIME_MS = 1000;
+	private static final int MOVE_TIME_MS = 500;
 	
 	private JLabel[][] labels;
 	
@@ -42,27 +44,70 @@ public class Game
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				System.out.println("You pressed " + e.getKeyChar() + " key!");
+				switch (e.getKeyCode())
+				{
+					case KeyEvent.VK_W:
+					case KeyEvent.VK_UP:
+					{
+						field.setDirection(EDirection.UP);
+						break;
+					}
+					case KeyEvent.VK_S:
+					case KeyEvent.VK_DOWN:
+					{
+						field.setDirection(EDirection.DOWN);
+						break;
+					}
+					case KeyEvent.VK_A:
+					case KeyEvent.VK_LEFT:
+					{
+						field.setDirection(EDirection.LEFT);
+						break;
+					}
+					case KeyEvent.VK_D:
+					case KeyEvent.VK_RIGHT:
+					{
+						field.setDirection(EDirection.RIGHT);
+						break;
+					}
+				}
 			}
 		});
 		
 		labels = new JLabel[WIDTH][HEIGHT];
-		for (int y = 0; y < WIDTH; y++)
+		for (int y = 0; y < HEIGHT; y++)
 		{
-			for (int x = 0; x < HEIGHT; x++)
+			for (int x = 0; x < WIDTH; x++)
 			{
 				labels[x][y] = new JLabel(field.getTile(x, y).getSprite());
 				add(labels[x][y]);
 			}
 		}
 		
-		moveTimer = new Timer(MOVE_TIME_MS, e -> field.moveSnake());
+		moveTimer = new Timer(MOVE_TIME_MS, e ->
+		{
+			field.moveSnake();
+			
+			updateSprites();
+			repaint();
+		});
 		moveTimer.start();
 	}
 	
 	public void updateSprite(int x, int y)
 	{
 		labels[x][y].setIcon(field.getTile(x, y).getSprite());
+	}
+	
+	public void updateSprites()
+	{
+		for (int x = 0; x < WIDTH; x++)
+		{
+			for (int y = 0; y < HEIGHT; y++)
+			{
+				updateSprite(x, y);
+			}
+		}
 	}
 	
 	public void restart()
