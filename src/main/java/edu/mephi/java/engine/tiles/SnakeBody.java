@@ -36,6 +36,14 @@ public class SnakeBody
 		}
 	}
 	
+	public SnakeBody(int x, int y, Field field, SnakeTile previous, SnakeTile next)
+	{
+		super(x, y, field);
+		this.previous = new WeakReference<>(previous);
+		this.next = next;
+		next.setPrevious(this);
+	}
+	
 	@Override
 	public SnakeTile getPrevious()
 	{
@@ -46,6 +54,18 @@ public class SnakeBody
 	public SnakeTile getNext()
 	{
 		return next;
+	}
+	
+	@Override
+	public void setPrevious(SnakeTile previous)
+	{
+		this.previous = new WeakReference<>(previous);
+	}
+	
+	@Override
+	public void setNext(SnakeTile next)
+	{
+		this.next = next;
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ public class ReversePill
 {
 	public ReversePill(int x, int y, Field field)
 	{
-		super(x, y, field);
+		super(x, y, field, 0);
 	}
 	
 	@Override
@@ -22,5 +22,6 @@ public class ReversePill
 	
 	@Override
 	public void eaten()
-	{}
+	{
+	}
 }

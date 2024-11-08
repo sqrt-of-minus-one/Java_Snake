@@ -11,7 +11,7 @@ public class Shield
 {
 	public Shield(int x, int y, Field field)
 	{
-		super(x, y, field);
+		super(x, y, field, 0);
 	}
 	
 	@Override
@@ -22,5 +22,6 @@ public class Shield
 	
 	@Override
 	public void eaten()
-	{}
+	{
+	}
 }

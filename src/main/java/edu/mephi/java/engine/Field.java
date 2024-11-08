@@ -7,13 +7,15 @@ public class Field
 	private final int width;
 	private final int height;
 	
+	private Game game;
 	private Tile[][] tiles;
 	private Snake snake;
 	
-	public Field(int width, int height)
+	public Field(int width, int height, Game game)
 	{
 		this.width = width;
 		this.height = height;
+		this.game = game;
 		tiles = new Tile[width][height];
 		
 		fillGrass();
@@ -30,9 +32,26 @@ public class Field
 		return height;
 	}
 	
+	public Game getGame()
+	{
+		return game;
+	}
+	
 	public Tile getTile(int x, int y)
 	{
 		return tiles[x][y];
+	}
+	
+	public void moveTile(int fromX, int fromY, int toX, int toY)
+	{
+		tiles[toX][toY] = tiles[fromX][fromY];
+		game.updateSprite(toX, toY);
+	}
+	
+	public void setTile(int x, int y, Tile tile)
+	{
+		tiles[x][y] = tile;
+		game.updateSprite(x, y);
 	}
 	
 	public Tile getNextTile(Tile tile, EDirection direction)
@@ -44,6 +63,16 @@ public class Field
 			case LEFT	-> getTile(tile.getX() == 0 ? width - 1 : tile.getX() - 1, tile.getY());
 			case RIGHT	-> getTile(tile.getX() == width - 1 ? 0 : tile.getX() + 1, tile.getY());
 		};
+	}
+	
+	public void moveSnake()
+	{
+		snake.move();
+	}
+	
+	public void lose()
+	{
+		getGame().lose();
 	}
 	
 	private void fillGrass()

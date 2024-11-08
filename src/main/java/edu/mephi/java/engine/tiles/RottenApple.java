@@ -11,7 +11,7 @@ public class RottenApple
 {
 	public RottenApple(int x, int y, Field field)
 	{
-		super(x, y, field);
+		super(x, y, field, -1);
 	}
 	
 	@Override
@@ -22,5 +22,6 @@ public class RottenApple
 	
 	@Override
 	public void eaten()
-	{}
+	{
+	}
 }

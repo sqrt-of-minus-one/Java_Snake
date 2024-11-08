@@ -46,6 +46,18 @@ public class SnakeHead
 		return next;
 	}
 	
+	@Override
+	public void setPrevious(SnakeTile previous)
+	{
+		throw new RuntimeException("The snake head cannot have a previous tile");
+	}
+	
+	@Override
+	public void setNext(SnakeTile next)
+	{
+		this.next = next;
+	}
+	
 	public boolean getBlink()
 	{
 		return blink;
@@ -54,11 +66,8 @@ public class SnakeHead
 	public void setBlink(boolean blink)
 	{
 		this.blink = blink;
-	}
-	
-	public void switchBlink()
-	{
-		blink = !blink;
+		getField().getGame().updateSprite(getX(), getY());
+		getField().getGame().repaint();
 	}
 	
 	@Override
@@ -117,5 +126,15 @@ public class SnakeHead
 	public EDirection getDirection()
 	{
 		return next.getDirectionTo(this);
+	}
+	
+	public void move(EDirection direction)
+	{
+		Tile nextTile = getNextTile(direction);
+		getField().moveTile(getX(), getY(), nextTile.getX(), nextTile.getY());
+		
+		next = new SnakeBody(getX(), getY(), getField(), this, next);
+		setXY(nextTile.getX(), nextTile.getY());
+		getField().setTile(next.getX(), next.getY(), next);
 	}
 }

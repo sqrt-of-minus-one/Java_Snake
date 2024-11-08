@@ -15,20 +15,21 @@ import java.io.IOException;
 // TODO допишите все необходимые сущности для игры
 public class Game
 		extends JPanel
-		implements ActionListener
 {
 	public static final int WIDTH = 20;
 	public static final int HEIGHT = 20;
 	
 	private Field field;
 	private boolean gameOver = false;
-	private Timer timer;
+	private Timer moveTimer;
+	
+	private static final int MOVE_TIME_MS = 1000;
 	
 	private JLabel[][] labels;
 	
 	public Game()
 	{
-		field = new Field(WIDTH, HEIGHT);
+		field = new Field(WIDTH, HEIGHT, this);
 		
 		setLayout(new GridLayout(HEIGHT, WIDTH, 0, 0));
 		setPreferredSize(new Dimension(WIDTH * ResourceManager.FIELD_TILE_SIZE, HEIGHT * ResourceManager.FIELD_TILE_SIZE));
@@ -55,19 +56,25 @@ public class Game
 			}
 		}
 		
-		timer = new Timer(2000, this);
-		timer.start();
+		moveTimer = new Timer(MOVE_TIME_MS, e -> field.moveSnake());
+		moveTimer.start();
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e)
+	public void updateSprite(int x, int y)
 	{
+		labels[x][y].setIcon(field.getTile(x, y).getSprite());
 	}
 	
 	public void restart()
 	{
-		timer.start();
+		moveTimer.start();
 		repaint();
+	}
+	
+	public void lose()
+	{
+		gameOver = true;
+		moveTimer.stop();
 	}
 	
 	public boolean isGameOver()

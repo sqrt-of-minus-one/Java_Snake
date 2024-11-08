@@ -31,6 +31,18 @@ public class SnakeTail
 	}
 	
 	@Override
+	public void setPrevious(SnakeTile previous)
+	{
+		this.previous = new WeakReference<>(previous);
+	}
+	
+	@Override
+	public void setNext(SnakeTile next)
+	{
+		throw new RuntimeException("The snake tail cannot have a next tile");
+	}
+	
+	@Override
 	public ImageIcon getSprite()
 	{
 		return ResourceManager.getSprite(

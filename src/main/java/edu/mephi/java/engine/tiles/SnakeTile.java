@@ -11,4 +11,6 @@ public abstract class SnakeTile extends Tile
 	
 	public abstract SnakeTile getPrevious();
 	public abstract SnakeTile getNext();
+	public abstract void setPrevious(SnakeTile previous);
+	public abstract void setNext(SnakeTile next);
 }

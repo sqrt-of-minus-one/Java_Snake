@@ -11,12 +11,17 @@ public class Wall
 {
 	public Wall(int x, int y, Field field)
 	{
-		super(x, y, field);
+		super(x, y, field, true);
 	}
 	
 	@Override
 	public ImageIcon getSprite()
 	{
 		return ResourceManager.getSprite(ESprite.WALL);
+	}
+	
+	@Override
+	public void collide()
+	{
 	}
 }
