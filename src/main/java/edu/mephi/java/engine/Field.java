@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Field
 {
-	public static final double BONUS_PROB = 0.4;
+	public static final double BONUS_PROB = .4;
 	
 	private final int width;
 	private final int height;
@@ -44,6 +44,11 @@ public class Field
 		return game;
 	}
 	
+	public Snake getSnake()
+	{
+		return snake;
+	}
+	
 	public Tile getTile(int x, int y)
 	{
 		return tiles[x][y];
@@ -75,11 +80,6 @@ public class Field
 		snake.setDirection(direction);
 	}
 	
-	public void moveSnake()
-	{
-		snake.move();
-	}
-	
 	public void generateFood()
 	{
 		replaceRandomGrass(new Apple(0, 0, this));
@@ -92,11 +92,6 @@ public class Field
 	public void generateWall()
 	{
 		replaceRandomGrass(new Wall(0, 0, this));
-	}
-	
-	public void lose()
-	{
-		getGame().lose();
 	}
 	
 	private void replaceRandomGrass(Tile tileToReplace)

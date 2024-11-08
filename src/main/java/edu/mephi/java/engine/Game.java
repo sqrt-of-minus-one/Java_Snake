@@ -86,7 +86,7 @@ public class Game
 		
 		moveTimer = new Timer(MOVE_TIME_MS, e ->
 		{
-			field.moveSnake();
+			field.getSnake().move();
 			
 			updateSprites();
 			repaint();

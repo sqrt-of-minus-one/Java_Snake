@@ -77,12 +77,12 @@ public class Snake
 			nextObstacle.collide();
 			if (nextObstacle.isLostOnCollide())
 			{
-				lose();
+				field.getGame().lose();
 			}
 		}
 		else if (SnakeBody.class.isAssignableFrom(nextTile.getClass()))
 		{
-			lose();
+			field.getGame().lose();
 		}
 		else
 		{
@@ -90,9 +90,31 @@ public class Snake
 		}
 	}
 	
-	public void lose()
+	public void reverse()
 	{
-		field.lose();
+		int newHeadX = tail.getX(), newHeadY = tail.getY();
+		int newTailX = head.getX(), newTailY = head.getY();
+		field.setTile(newTailX, newTailY, tail);
+		field.setTile(newHeadX, newHeadY, head);
+		head.setXY(newHeadX, newHeadY);
+		tail.setXY(newTailX, newTailY);
+		
+		SnakeTile tmp = head.getNext();
+		if (tmp != tail)
+		{
+			head.setNext(tail.getPrevious());
+			tail.setPrevious(tmp);
+			
+			for (SnakeTile i = tail.getPrevious(); i != head; i = i.getPrevious())
+			{
+				tmp = i.getNext();
+				i.setNext(i.getPrevious() == head ? tail : i.getPrevious());
+				i.setPrevious(tmp == tail ? head : tmp);
+			}
+		}
+		
+		headDirection = head.getDirection();
+		moveDirection = headDirection;
 	}
 	
 	private void moveHead()
@@ -102,12 +124,29 @@ public class Snake
 	
 	private void moveTail(int deltaSize)
 	{
+		if (deltaSize >= 1)
+		{
+			deltaSize = 1;
+		}
+		else if (deltaSize <= -1)
+		{
+			if (head.getNext().getNext() == tail)
+			{
+				field.getGame().lose();
+				deltaSize = 0;
+			}
+			else
+			{
+				deltaSize = -1;
+			}
+		}
+		
 		SnakeTile oldTail = tail;
 		SnakeTile newTail = tail;
 		for (int i = 0; i < 1 - deltaSize; i++)
 		{
-			field.setTile(tail.getX(), tail.getY(), new Grass(tail.getX(), tail.getY(), field));
-			newTail = tail.getPrevious();
+			field.setTile(newTail.getX(), newTail.getY(), new Grass(newTail.getX(), newTail.getY(), field));
+			newTail = newTail.getPrevious();
 		}
 		oldTail.setXY(newTail.getX(), newTail.getY());
 		oldTail.setPrevious(newTail.getPrevious());
@@ -117,7 +156,7 @@ public class Snake
 	
 	private void move_(int deltaSize)
 	{
-		if (head.getNext() == tail)
+		if (head.getNext() == tail || head.getNext().getNext() == tail)
 		{
 			moveHead();
 			moveTail(deltaSize);

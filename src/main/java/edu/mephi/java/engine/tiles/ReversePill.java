@@ -23,5 +23,6 @@ public class ReversePill
 	@Override
 	public void eaten()
 	{
+		getField().getSnake().reverse();
 	}
 }
