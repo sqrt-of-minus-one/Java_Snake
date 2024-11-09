@@ -94,12 +94,37 @@ public class Snake
 			nextObstacle.collide();
 			if (nextObstacle.isLostOnCollide())
 			{
-				field.getGame().lose();
+				if (shield > 0)
+				{
+					move_(0);
+					shield = 0;
+				}
+				else
+				{
+					field.getGame().lose();
+				}
 			}
 		}
 		else if (SnakeBody.class.isAssignableFrom(nextTile.getClass()))
 		{
-			field.getGame().lose();
+			if (shield > 0)
+			{
+				SnakeBody nextBody = (SnakeBody)nextTile;
+				for (SnakeTile i = nextBody.getNext(); i != null; i = i.getNext())
+				{
+					field.setTile(i.getX(), i.getY(), new Grass(i.getX(), i.getY(), field));
+				}
+				field.setTile(nextBody.getX(), nextBody.getY(), tail);
+				tail.setXY(nextBody.getX(), nextTile.getY());
+				tail.setPrevious(nextBody.getPrevious());
+				nextBody.getPrevious().setNext(tail);
+				shield = 0;
+				move_(0);
+			}
+			else
+			{
+				field.getGame().lose();
+			}
 		}
 		else
 		{

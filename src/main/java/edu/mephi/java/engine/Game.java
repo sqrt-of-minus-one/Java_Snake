@@ -34,8 +34,6 @@ public class Game
 	
 	public Game()
 	{
-		field = new Field(WIDTH, HEIGHT, this);
-		
 		setLayout(new GridLayout(HEIGHT + 1, WIDTH, 0, 0));
 		setPreferredSize(new Dimension(WIDTH * ResourceManager.FIELD_TILE_SIZE, (HEIGHT + 1) * ResourceManager.FIELD_TILE_SIZE));
 		setAlignmentX(LEFT_ALIGNMENT);
@@ -73,6 +71,23 @@ public class Game
 						field.setDirection(EDirection.RIGHT);
 						break;
 					}
+					case KeyEvent.VK_SPACE:
+					{
+						field.moveSnake();
+						updateSprites();
+						repaint();
+						moveTimer.restart();
+						break;
+					}
+					case KeyEvent.VK_R:
+					{
+						restart();
+						break;
+					}
+					case KeyEvent.VK_SLASH:
+					{
+						break;
+					}
 				}
 			}
 		});
@@ -82,7 +97,7 @@ public class Game
 		{
 			for (int x = 0; x < WIDTH; x++)
 			{
-				labels[x][y] = new JLabel(field.getTile(x, y).getSprite());
+				labels[x][y] = new JLabel(ResourceManager.getSprite(ESprite.GRASS));
 				add(labels[x][y]);
 			}
 		}
@@ -95,11 +110,9 @@ public class Game
 			scoreLabels[i] = new JLabel(ResourceManager.getSprite(ESprite.NUM_ZERO));
 			add(scoreLabels[i]);
 		}
-		updateScore();
 		
 		shieldIndicator = new JLabel(ResourceManager.getSprite(ESprite.GRASS));
 		add(shieldIndicator);
-		updateShield();
 		
 		moveTimer = new Timer(MOVE_TIME_MS, e ->
 		{
@@ -108,7 +121,8 @@ public class Game
 			updateSprites();
 			repaint();
 		});
-		moveTimer.start();
+		
+		restart();
 	}
 	
 	public void updateSprite(int x, int y)
@@ -131,7 +145,12 @@ public class Game
 	
 	public void restart()
 	{
-		moveTimer.start();
+		field = new Field(WIDTH, HEIGHT, this);
+		moveTimer.restart();
+		
+		updateSprites();
+		updateScore();
+		updateShield();
 		repaint();
 	}
 	

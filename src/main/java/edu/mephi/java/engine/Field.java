@@ -66,6 +66,11 @@ public class Field
 	
 	public void moveSnake()
 	{
+		if (game.isGameOver())
+		{
+			return;
+		}
+		
 		snake.move();
 		for (int x = 0; x < width; x++)
 		{
