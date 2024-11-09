@@ -151,7 +151,7 @@ public class Field
 	{
 		if (snake == null)
 		{
-			snake = new Snake(width / 2, height / 2, this, EDirection.DOWN, 2);
+			snake = new Snake(width / 2, height / 2, this, EDirection.RIGHT, 2);
 			for (SnakeTile tile = snake.getHead(); tile != null; tile = tile.getNext())
 			{
 				tiles[tile.getX()][tile.getY()] = tile;

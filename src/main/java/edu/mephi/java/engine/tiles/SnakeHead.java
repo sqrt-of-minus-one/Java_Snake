@@ -73,6 +73,10 @@ public class SnakeHead
 	@Override
 	public ImageIcon getSprite()
 	{
+		if (getField().getGame().isGameOver())
+		{
+			return ResourceManager.getSprite(ESprite.FAILURE);
+		}
 		switch (getDirection())
 		{
 		case UP:

@@ -231,6 +231,7 @@ public class Game
 	
 	public void restart()
 	{
+		gameOver = false;
 		field = new Field(WIDTH, HEIGHT, this);
 		moveTimer.restart();
 		

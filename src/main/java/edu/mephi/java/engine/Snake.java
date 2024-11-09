@@ -13,6 +13,7 @@ public class Snake
 	private int shield;
 	private EDirection headDirection;
 	private EDirection moveDirection;
+	private EDirection nextMoveDirection;
 	private Timer blinkTimer;
 	private Timer unblinkTimer;
 	private static final int BLINK_TIME_MS = 5000;
@@ -23,6 +24,7 @@ public class Snake
 		this.field = field;
 		headDirection = direction;
 		moveDirection = direction;
+		nextMoveDirection = direction;
 		this.length = length;
 		shield = 0;
 		
@@ -68,9 +70,14 @@ public class Snake
 	
 	public void setDirection(EDirection direction)
 	{
-		if (direction != headDirection.getOpposite())
+		if (direction != headDirection && direction != headDirection.getOpposite())
 		{
 			moveDirection = direction;
+			nextMoveDirection = moveDirection;
+		}
+		else if (moveDirection != headDirection)
+		{
+			nextMoveDirection = direction;
 		}
 	}
 	
@@ -163,6 +170,7 @@ public class Snake
 		
 		headDirection = head.getDirection();
 		moveDirection = headDirection;
+		nextMoveDirection = moveDirection;
 	}
 	
 	private void moveHead()
@@ -217,5 +225,7 @@ public class Snake
 			moveHead();
 		}
 		headDirection = head.getDirection();
+		moveDirection = nextMoveDirection;
+		nextMoveDirection = moveDirection;
 	}
 }
