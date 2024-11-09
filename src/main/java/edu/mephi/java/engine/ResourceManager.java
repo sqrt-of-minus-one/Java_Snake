@@ -87,6 +87,11 @@ public class ResourceManager
 		sprites.put(ESprite.NUM_SEVEN, createImage(7, 6));
 		sprites.put(ESprite.NUM_EIGHT, createImage(4, 7));
 		sprites.put(ESprite.NUM_NINE, createImage(5, 7));
+		
+		sprites.put(ESprite.SUCCESS, createImage(4, 4));
+		sprites.put(ESprite.FAILURE, createImage(5, 4));
+		sprites.put(ESprite.QUESTION, createImage(6, 4));
+		sprites.put(ESprite.SLASH, createImage(7, 4));
 	}
 	
 	private static ImageIcon createImage(int x, int y)

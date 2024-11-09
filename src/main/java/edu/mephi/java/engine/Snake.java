@@ -113,6 +113,7 @@ public class Snake
 				for (SnakeTile i = nextBody.getNext(); i != null; i = i.getNext())
 				{
 					field.setTile(i.getX(), i.getY(), new Grass(i.getX(), i.getY(), field));
+					length--;
 				}
 				field.setTile(nextBody.getX(), nextBody.getY(), tail);
 				tail.setXY(nextBody.getX(), nextTile.getY());
