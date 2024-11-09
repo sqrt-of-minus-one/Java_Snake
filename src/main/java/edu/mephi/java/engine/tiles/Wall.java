@@ -6,6 +6,7 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// The snake loses when it collides with the wall
 public class Wall
 		extends Obstacle
 {
@@ -22,6 +23,5 @@ public class Wall
 	
 	@Override
 	public void collide()
-	{
-	}
+	{}
 }

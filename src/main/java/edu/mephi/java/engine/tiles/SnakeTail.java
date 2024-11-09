@@ -45,6 +45,7 @@ public class SnakeTail
 	@Override
 	public ImageIcon getSprite()
 	{
+		// The sprite depends on the direction of the tail
 		return ResourceManager.getSprite(
 				switch (getDirection())
 				{
@@ -57,6 +58,8 @@ public class SnakeTail
 	
 	public EDirection getDirection()
 	{
+		// The direction of the tail depends on where the previous tile is
+		// (previous.get() should not be null)
 		return previous.get().getDirectionTo(this);
 	}
 }

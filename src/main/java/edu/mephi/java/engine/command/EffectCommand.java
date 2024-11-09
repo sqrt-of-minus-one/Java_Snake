@@ -6,17 +6,25 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// Apply an effect for the snake
 public class EffectCommand extends Command
 {
+	// The status of the command
 	public enum EInputPosition
 	{
-		EFFECT, DURATION, COMPLETE
+		EFFECT,		// Waiting for the effect type to be specified
+		DURATION,	// Waiting for the effect duration to be specified
+		COMPLETE	// The command is complete
 	}
 	
-	private EEffect effect;
-	private int duration;
-	private EInputPosition inputPosition;
+	private EEffect effect; // The effect type
+	private int duration; // The duration of the effect
+	private EInputPosition inputPosition; // The current status
 	
+	// Applies an effect for the snake
+	// Parameters:
+	//   1 (Effect). The type of the effect that will be applied
+	//   2 (Number). The duration of the effect in snake movements
 	public EffectCommand(Game game)
 	{
 		super(game);
@@ -29,10 +37,12 @@ public class EffectCommand extends Command
 	@Override
 	public EWaitingFor waitingFor()
 	{
+		// If the command has been applied
 		if (getApplyResult() != null)
 		{
 			return EWaitingFor.APPLIED;
 		}
+		
 		return switch (inputPosition)
 		{
 			case EFFECT -> EWaitingFor.EFFECT;
@@ -46,12 +56,14 @@ public class EffectCommand extends Command
 	{
 		drawEmpty(labels);
 		
+		// If the command has been applied, draw the result
 		if (getApplyResult() != null)
 		{
 			labels[1].setIcon(ResourceManager.getSprite(getApplyResult() ? ESprite.SUCCESS : ESprite.FAILURE));
 			return;
 		}
 		
+		// The command icon
 		labels[1].setIcon(ResourceManager.getSprite(ESprite.SHIELD));
 		
 		switch (inputPosition)
@@ -59,7 +71,7 @@ public class EffectCommand extends Command
 			case COMPLETE:
 			case DURATION:
 			{
-				drawNumber(labels, 3, 4, duration);
+				drawNumber(labels, 3, 5, duration);
 				// Fallthrough
 			}
 			case EFFECT:
@@ -88,6 +100,7 @@ public class EffectCommand extends Command
 	@Override
 	public void addDigit(int digit)
 	{
+		// The digit cannot be added if the command doesn't expect a number
 		if (inputPosition != EInputPosition.DURATION)
 		{
 			return;
@@ -101,15 +114,16 @@ public class EffectCommand extends Command
 		
 		duration *= 10;
 		duration += digit;
-		if (duration >= 1000)
+		if (duration >= 1000) // The maximum duration is 1000 movements
 		{
 			duration = digit;
 		}
 	}
 	
 	@Override
-	public void applyElement()
+	public void applyParameter()
 	{
+		// Expect the next parameter of mark the command as complete
 		inputPosition = switch (inputPosition)
 		{
 			case EFFECT -> effect != null ? EInputPosition.DURATION : EInputPosition.EFFECT;
@@ -120,7 +134,7 @@ public class EffectCommand extends Command
 	@Override
 	protected boolean apply_()
 	{
-		if (inputPosition == EInputPosition.COMPLETE)
+		if (inputPosition == EInputPosition.COMPLETE) // Only complete commands can be applied
 		{
 			switch (effect)
 			{

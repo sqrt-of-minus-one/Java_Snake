@@ -9,12 +9,14 @@ import javax.swing.*;
 public class SnakeHead
 		extends SnakeTile
 {
-	private SnakeTile next;
-	private boolean blink;
+	private SnakeTile next; // The next snake tile
+	private boolean blink; // If the snake is blinking at the moment
 	
 	public SnakeHead(int x, int y, Field field, EDirection snakeDirection, int length)
 	{
 		super(x, y, field);
+		
+		// The coordinates of the next tile
 		int nextX = x;
 		int nextY = y;
 		switch (snakeDirection)
@@ -24,6 +26,8 @@ public class SnakeHead
 			case LEFT -> nextX++;
 			case RIGHT -> nextX--;
 		}
+		
+		// The next tile can be either a body or a tail
 		if (length > 2)
 		{
 			next = new SnakeBody(nextX, nextY, field, this, snakeDirection, length - 1);
@@ -58,11 +62,6 @@ public class SnakeHead
 		this.next = next;
 	}
 	
-	public boolean getBlink()
-	{
-		return blink;
-	}
-	
 	public void setBlink(boolean blink)
 	{
 		this.blink = blink;
@@ -73,10 +72,15 @@ public class SnakeHead
 	@Override
 	public ImageIcon getSprite()
 	{
+		// Return a failure sign if the game is over
 		if (getField().getGame().isGameOver())
 		{
 			return ResourceManager.getSprite(ESprite.FAILURE);
 		}
+		
+		// Each direction has its own sprite set
+		// If the next tile is eatable, the snake opens its mouth ("ready" sprites)
+		// The snake can blink
 		switch (getDirection())
 		{
 		case UP:
@@ -129,14 +133,20 @@ public class SnakeHead
 	
 	public EDirection getDirection()
 	{
+		// The direction of the head depends on the direction to the next tile
 		return next.getDirectionTo(this);
 	}
 	
+	// The tile in front of the snake will be destroyed
+	// The possibility of the movement is supposed to be confirmed before this method is called
+	// The tail is not moved, which means the snake length will be increased by 1
 	public void move(EDirection direction)
 	{
+		// Move the head to the next tile
 		Tile nextTile = getNextTile(direction);
 		getField().moveTile(getX(), getY(), nextTile.getX(), nextTile.getY());
 		
+		// Create a new body segment and place it where the head used to be
 		next = new SnakeBody(getX(), getY(), getField(), this, next);
 		setXY(nextTile.getX(), nextTile.getY());
 		getField().setTile(next.getX(), next.getY(), next);

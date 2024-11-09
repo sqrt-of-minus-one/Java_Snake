@@ -6,15 +6,15 @@ import java.util.Random;
 
 public class Field
 {
-	public static final double BONUS_PROB = .4;
+	public static final double BONUS_PROB = .4; // The probability of an extra object generation
 	
 	private final int width;
 	private final int height;
 	
-	private Game game;
-	private Tile[][] tiles;
+	private final Game game;
+	private final Tile[][] tiles; // The tiles of the field
 	private Snake snake;
-	private Random random;
+	private final Random random; // The random number generator
 	
 	public Field(int width, int height, Game game)
 	{
@@ -54,11 +54,14 @@ public class Field
 		return tiles[x][y];
 	}
 	
+	// Copies the tile; you should remove or replace the old tile manually
+	// Doesn't change the coordinates stored in the tile object
 	public void moveTile(int fromX, int fromY, int toX, int toY)
 	{
 		tiles[toX][toY] = tiles[fromX][fromY];
 	}
 	
+	// Doesn't set the coordinates stored in the tile object
 	public void setTile(int x, int y, Tile tile)
 	{
 		tiles[x][y] = tile;
@@ -66,6 +69,7 @@ public class Field
 	
 	public void moveSnake()
 	{
+		// The snake can't move when the game is over
 		if (game.isGameOver())
 		{
 			return;
@@ -81,6 +85,7 @@ public class Field
 		}
 	}
 	
+	// Returns the neighbour tile in the specified direction
 	public Tile getNextTile(Tile tile, EDirection direction)
 	{
 		return switch (direction)
@@ -92,11 +97,7 @@ public class Field
 		};
 	}
 	
-	public void setDirection(EDirection direction)
-	{
-		snake.setDirection(direction);
-	}
-	
+	// Creates an apple in a random point; may also create an extra object
 	public void generateFood()
 	{
 		replaceRandomGrass(new Apple(0, 0, this));
@@ -106,11 +107,13 @@ public class Field
 		}
 	}
 	
+	// Creates a wall in a random point
 	public void generateWall()
 	{
 		replaceRandomGrass(new Wall(0, 0, this));
 	}
 	
+	// Replaces a random grass tile with the specified tile
 	private void replaceRandomGrass(Tile tileToReplace)
 	{
 		int x, y;
@@ -123,6 +126,7 @@ public class Field
 		tiles[x][y] = tileToReplace;
 	}
 	
+	// Creates a random extra object in a random point
 	private void generateBonus()
 	{
 		replaceRandomGrass(
@@ -136,6 +140,7 @@ public class Field
 				});
 	}
 	
+	// Fills the whole field with the grass
 	private void fillGrass()
 	{
 		for (int i = 0; i < tiles.length; i++)
@@ -147,6 +152,7 @@ public class Field
 		}
 	}
 	
+	// Creates a snake and places it on the field
 	private void createSnake()
 	{
 		if (snake == null)

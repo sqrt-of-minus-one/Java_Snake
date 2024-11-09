@@ -6,6 +6,7 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// The hammer builds a wall
 public class Hammer
 		extends Eatable
 {

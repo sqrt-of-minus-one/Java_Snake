@@ -7,16 +7,20 @@ import edu.mephi.java.engine.ResourceManager;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 
+// The snake tile which is neither a head nor the tail
 public class SnakeBody
 		extends SnakeTile
 {
-	private WeakReference<SnakeTile> previous;
-	private SnakeTile next;
+	private WeakReference<SnakeTile> previous; // The previous snake tile
+	private SnakeTile next; // The next snake tile
 	
+	// This constructor is used when the snake is created via the `SnakeHead` constructor
 	public SnakeBody(int x, int y, Field field, SnakeTile previous, EDirection snakeDirection, int lengthLeft)
 	{
 		super(x, y, field);
 		this.previous = new WeakReference<>(previous);
+		
+		// The coordinates of the next tile
 		int nextX = x;
 		int nextY = y;
 		switch (snakeDirection)
@@ -26,6 +30,8 @@ public class SnakeBody
 			case LEFT -> nextX++;
 			case RIGHT -> nextX--;
 		}
+		
+		// The next tile can be either a body or a tail
 		if (lengthLeft > 1)
 		{
 			next = new SnakeBody(nextX, nextY, field, this, snakeDirection, lengthLeft - 1);
@@ -36,6 +42,9 @@ public class SnakeBody
 		}
 	}
 	
+	// Create a new body segment for the snake that already exists
+	// The `previous` pointer of the next tile is changed automatically
+	// The `next` pointer of the previous tile is not changed
 	public SnakeBody(int x, int y, Field field, SnakeTile previous, SnakeTile next)
 	{
 		super(x, y, field);
@@ -85,8 +94,9 @@ public class SnakeBody
 	
 	public EDoubleDirection getDirection()
 	{
-		EDirection next_direction = getDirectionTo(next);
-		EDirection previous_direction = getDirectionTo(previous.get());
+		// In order to get the direction of the body segment, we need to check the positions of the neighbour tiles
+		EDirection next_direction = getDirectionTo(next); // Where is the next tile
+		EDirection previous_direction = getDirectionTo(previous.get()); // Where is the previous tile
 		return switch (next_direction)
 		{
 			case UP -> switch (previous_direction)

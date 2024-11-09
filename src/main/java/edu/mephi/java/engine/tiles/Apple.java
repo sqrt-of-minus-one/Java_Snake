@@ -6,6 +6,7 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// The apple makes the snake longer
 public class Apple
 		extends Eatable
 {
@@ -23,6 +24,7 @@ public class Apple
 	@Override
 	public void eaten()
 	{
+		// Create another apple when eaten
 		getField().generateFood();
 	}
 }

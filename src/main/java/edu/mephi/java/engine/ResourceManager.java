@@ -9,24 +9,27 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+// The resource manager allows to get any sprite you need using `getSprite()` method
 public class ResourceManager
 {
 	public static final String TEXTURE_FILE = "Snake.png";
-	public static final int TEXTURE_TILE_SIZE = 8;
-	public static final int FIELD_TILE_SIZE = 64;
+	public static final int TEXTURE_TILE_SIZE = 8; // The size of a single sprite in a file
+	public static final int FIELD_TILE_SIZE = 64; // The size of a single sprite on a screen
 	
 	private static final Map<ESprite, ImageIcon> sprites;
-	private static BufferedImage bufferedImage;
+	private static BufferedImage bufferedImage; // The texture image
 	
 	public static ImageIcon getSprite(ESprite sprite)
 	{
 		return sprites.get(sprite);
 	}
 	
+	// Initialise the resource manager, fill the map with sprites
 	static
 	{
 		try
 		{
+			// Load the texture from the file
 			bufferedImage = ImageIO.read(new File(TEXTURE_FILE));
 		}
 		catch (IOException e)
@@ -34,6 +37,7 @@ public class ResourceManager
 			System.out.println("Error: couldn't open a texture file");
 		}
 		
+		// Create and fill the map
 		sprites = new HashMap<>();
 		sprites.put(ESprite.GRASS, createImage(2, 7));
 		
@@ -94,6 +98,8 @@ public class ResourceManager
 		sprites.put(ESprite.SLASH, createImage(7, 4));
 	}
 	
+	// Can be used to extract a sprite from the whole texture
+	// x & y are set in the sprite coordinates, i.e. in pixel/TEXTURE_TILE_SIZE
 	private static ImageIcon createImage(int x, int y)
 	{
 		return new ImageIcon(bufferedImage.getSubimage(x * TEXTURE_TILE_SIZE, y * TEXTURE_TILE_SIZE, TEXTURE_TILE_SIZE, TEXTURE_TILE_SIZE)

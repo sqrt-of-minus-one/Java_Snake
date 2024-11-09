@@ -6,6 +6,7 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// The empty tile
 public class Grass
 		extends Tile
 {

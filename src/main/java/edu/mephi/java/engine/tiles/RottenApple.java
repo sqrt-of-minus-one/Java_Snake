@@ -6,6 +6,7 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// The rotten apple makes the snake shorter
 public class RottenApple
 		extends Eatable
 {
@@ -22,6 +23,5 @@ public class RottenApple
 	
 	@Override
 	public void eaten()
-	{
-	}
+	{}
 }

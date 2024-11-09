@@ -6,6 +6,7 @@ import edu.mephi.java.engine.ResourceManager;
 
 import javax.swing.*;
 
+// The reverse pill swaps the snake's head and tail
 public class ReversePill
 		extends Eatable
 {

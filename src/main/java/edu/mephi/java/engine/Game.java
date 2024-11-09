@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-// TODO допишите все необходимые сущности для игры
 public class Game
 		extends JPanel
 {
@@ -20,16 +19,16 @@ public class Game
 	private Field field;
 	private boolean gameOver = false;
 	private Timer moveTimer;
-	private Command command;
-	private boolean commandStarted;
+	private Command command; // The command that is currently being set up
+	private boolean commandStarted; // Whether a command is being set up at the moment
 	
-	private static final int MOVE_TIME_MS = 500;
+	private static final int MOVE_TIME_MS = 500; // How often the snake moves
 	
-	private JLabel[][] labels;
-	private JLabel scoreIconLabel;
-	private JLabel[] scoreLabels;
-	private JLabel shieldIndicator;
-	private JLabel[] commandLabels;
+	private final JLabel[][] labels; // These labels display the field
+	private final JLabel scoreIconLabel; // This label displays the icon of the player score
+	private final JLabel[] scoreLabels; // These labels display the player score
+	private final JLabel shieldIndicator; // This label displays the shield icon if the shield is active
+	private final JLabel[] commandLabels; // These labels display the command that is currently being set up
 	
 	public Game()
 	{
@@ -46,15 +45,15 @@ public class Game
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				if (!commandStarted)
+				if (!commandStarted) // Playing
 				{
 					switch (e.getKeyCode())
 					{
-						case KeyEvent.VK_W, KeyEvent.VK_UP -> field.setDirection(EDirection.UP);
-						case KeyEvent.VK_S, KeyEvent.VK_DOWN -> field.setDirection(EDirection.DOWN);
-						case KeyEvent.VK_A, KeyEvent.VK_LEFT -> field.setDirection(EDirection.LEFT);
-						case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> field.setDirection(EDirection.RIGHT);
-						case KeyEvent.VK_SPACE ->
+						case KeyEvent.VK_W, KeyEvent.VK_UP -> field.getSnake().setDirection(EDirection.UP);
+						case KeyEvent.VK_S, KeyEvent.VK_DOWN -> field.getSnake().setDirection(EDirection.DOWN);
+						case KeyEvent.VK_A, KeyEvent.VK_LEFT -> field.getSnake().setDirection(EDirection.LEFT);
+						case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> field.getSnake().setDirection(EDirection.RIGHT);
+						case KeyEvent.VK_SPACE -> // Move faster
 						{
 							field.moveSnake();
 							updateSprites();
@@ -65,39 +64,38 @@ public class Game
 						case KeyEvent.VK_SLASH -> startCommand();
 					}
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				// Entering a command
+				else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) // Back to game
 				{
 					resetCommand();
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				else if (e.getKeyCode() == KeyEvent.VK_ENTER) // Attempt to apply a command
 				{
-					if (command == null)
+					if (command == null || command.waitingFor() == Command.EWaitingFor.APPLIED)
 					{
-						resetCommand();
-					}
-					else if (command.waitingFor() == Command.EWaitingFor.APPLIED)
-					{
+						// Cancel the entering of a command
 						resetCommand();
 					}
 					else
 					{
-						command.applyElement();
-						if (command.waitingFor() == Command.EWaitingFor.COMPLETE)
+						command.applyParameter(); // Confirm the parameter
+						if (command.waitingFor() == Command.EWaitingFor.COMPLETE) // Apply the command if all the parameters are set
 						{
 							command.apply();
 							updateSprites();
 						}
-						command.draw(commandLabels);
+						command.draw(commandLabels); // Draw the command result
 					}
 				}
 				else if (command == null)
 				{
+					// Specify the command
 					switch (e.getKeyCode())
 					{
 						case KeyEvent.VK_S -> command = new SpawnCommand(Game.this);
 						case KeyEvent.VK_E -> command = new EffectCommand(Game.this);
 					}
-					if (command != null)
+					if (command != null) // Draw the command if it was specified
 					{
 						command.draw(commandLabels);
 						repaint();
@@ -105,10 +103,10 @@ public class Game
 				}
 				else
 				{
-					switch (command.waitingFor())
+					switch (command.waitingFor()) // What parameters is the command expecting
 					{
-						case APPLIED -> resetCommand();
-						case COMPLETE ->
+						case APPLIED -> resetCommand(); // The command has been applied => back to game
+						case COMPLETE -> // The command is complete => apply it
 						{
 							switch (e.getKeyCode())
 							{
@@ -125,7 +123,6 @@ public class Game
 								case KeyEvent.VK_Z -> command.setSpawnable(Command.ESpawnable.REVERSE_PILL);
 								case KeyEvent.VK_S -> command.setSpawnable(Command.ESpawnable.SHIELD);
 								case KeyEvent.VK_H -> command.setSpawnable(Command.ESpawnable.HAMMER);
-								case KeyEvent.VK_ENTER -> command.applyElement();
 							}
 						}
 						case EFFECT ->
@@ -149,7 +146,6 @@ public class Game
 								case KeyEvent.VK_7 -> command.addDigit(7);
 								case KeyEvent.VK_8 -> command.addDigit(8);
 								case KeyEvent.VK_9 -> command.addDigit(9);
-								case KeyEvent.VK_ENTER -> command.applyElement();
 							}
 							if (command.waitingFor() == Command.EWaitingFor.COMPLETE)
 							{
@@ -166,6 +162,7 @@ public class Game
 			}
 		});
 		
+		// Set up the field labels
 		labels = new JLabel[WIDTH][HEIGHT];
 		for (int y = 0; y < HEIGHT; y++)
 		{
@@ -176,6 +173,7 @@ public class Game
 			}
 		}
 		
+		// Set up the score labels
 		scoreIconLabel = new JLabel(ResourceManager.getSprite(ESprite.APPLE));
 		add(scoreIconLabel);
 		scoreLabels = new JLabel[3];
@@ -185,9 +183,11 @@ public class Game
 			add(scoreLabels[i]);
 		}
 		
+		// Set up the shield label
 		shieldIndicator = new JLabel(ResourceManager.getSprite(ESprite.GRASS));
 		add(shieldIndicator);
 		
+		// Set up the command labels
 		commandLabels = new JLabel[9];
 		for (int i = 0; i < commandLabels.length; i++)
 		{
@@ -195,7 +195,8 @@ public class Game
 			add(commandLabels[i]);
 		}
 		
-		moveTimer = new Timer(MOVE_TIME_MS, e ->
+		// Set up the move timer
+		moveTimer = new Timer(MOVE_TIME_MS, _ ->
 		{
 			field.moveSnake();
 			
@@ -203,7 +204,7 @@ public class Game
 			repaint();
 		});
 		
-		restart();
+		restart(); // Launch the game
 	}
 	
 	public Field getField()
@@ -211,11 +212,13 @@ public class Game
 		return field;
 	}
 	
+	// Updates the sprite on the field
 	public void updateSprite(int x, int y)
 	{
 		labels[x][y].setIcon(field.getTile(x, y).getSprite());
 	}
 	
+	// Updates all sprites except the command sprites
 	public void updateSprites()
 	{
 		for (int x = 0; x < WIDTH; x++)
@@ -229,10 +232,11 @@ public class Game
 		updateShield();
 	}
 	
+	// Start or restart the game
 	public void restart()
 	{
 		gameOver = false;
-		field = new Field(WIDTH, HEIGHT, this);
+		field = new Field(WIDTH, HEIGHT, this); // Create a new field
 		moveTimer.restart();
 		
 		updateSprites();
@@ -254,7 +258,8 @@ public class Game
 	
 	private void updateScore()
 	{
-		int score = field.getSnake().getLength() - 2;
+		int score = field.getSnake().getLength() - 2; // The score is the snake length excluding its head and its tail
+		// Draw the number
 		for (int i = scoreLabels.length - 1; i >= 0; i--)
 		{
 			scoreLabels[i].setIcon(ResourceManager.getSprite(ESprite.getNum(score % 10)));
@@ -269,15 +274,16 @@ public class Game
 	
 	private void startCommand()
 	{
-		if (!gameOver)
+		if (!gameOver) // Commands can only be applied when the game is not over
 		{
-			commandStarted = true;
-			Command.drawEmpty(commandLabels);
+			commandStarted = true; // Start the command
+			Command.drawEmpty(commandLabels); // Draw the empty command
 			repaint();
-			moveTimer.stop();
+			moveTimer.stop(); // Pause the game
 		}
 	}
 	
+	// Stop entering the command and resume the game
 	private void resetCommand()
 	{
 		command = null;
