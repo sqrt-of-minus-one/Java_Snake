@@ -96,6 +96,7 @@ public class SpawnCommand extends Command
 							case REVERSE_PILL -> ESprite.REVERSE_PILL;
 							case SHIELD -> ESprite.SHIELD;
 							case HAMMER -> ESprite.HAMMER;
+							case WALL -> ESprite.WALL;
 						}));
 				// fallthrough
 			}
@@ -183,6 +184,7 @@ public class SpawnCommand extends Command
 				case REVERSE_PILL -> new ReversePill(x, y, getGame().getField());
 				case SHIELD -> new Shield(x, y, getGame().getField());
 				case HAMMER -> new Hammer(x, y, getGame().getField());
+				case WALL -> new Wall(x, y, getGame().getField());
 			});
 			return true;
 		}

@@ -22,7 +22,7 @@ public abstract class Command
 	// Possible spawnable objects
 	public enum ESpawnable
 	{
-		GRASS, APPLE, ROTTEN_APPLE, REVERSE_PILL, SHIELD, HAMMER
+		GRASS, APPLE, ROTTEN_APPLE, REVERSE_PILL, SHIELD, HAMMER, WALL
 	}
 	
 	// Possible effects

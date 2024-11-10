@@ -14,7 +14,7 @@ public class ResourceManager
 {
 	public static final String TEXTURE_FILE = "Snake.png";
 	public static final int TEXTURE_TILE_SIZE = 8; // The size of a single sprite in a file
-	public static final int FIELD_TILE_SIZE = 64; // The size of a single sprite on a screen
+	public static final int FIELD_TILE_SIZE = 32; // The size of a single sprite on a screen
 	
 	private static final Map<ESprite, ImageIcon> sprites;
 	private static BufferedImage bufferedImage; // The texture image

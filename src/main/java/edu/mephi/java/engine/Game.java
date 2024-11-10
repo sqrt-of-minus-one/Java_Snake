@@ -123,6 +123,7 @@ public class Game
 								case KeyEvent.VK_Z -> command.setSpawnable(Command.ESpawnable.REVERSE_PILL);
 								case KeyEvent.VK_S -> command.setSpawnable(Command.ESpawnable.SHIELD);
 								case KeyEvent.VK_H -> command.setSpawnable(Command.ESpawnable.HAMMER);
+								case KeyEvent.VK_W -> command.setSpawnable(Command.ESpawnable.WALL);
 							}
 						}
 						case EFFECT ->
