@@ -1,108 +1,110 @@
 package edu.mephi.java.snake;
 
-import javax.imageio.ImageIO;
+import edu.mephi.java.engine.AbstractResourceManager;
+import edu.mephi.java.engine.ECommonSprite;
+import edu.mephi.java.engine.exception.ResourceManagerNotInitialisedException;
+
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 // The resource manager allows to get any sprite you need using `getSprite()` method
 public class ResourceManager
+	extends AbstractResourceManager
 {
-	public static final String TEXTURE_FILE = "Snake.png";
-	public static final int TEXTURE_TILE_SIZE = 8; // The size of a single sprite in a file
-	public static final int FIELD_TILE_SIZE = 32; // The size of a single sprite on a screen
+	public static final String[] TEXTURE_FILES = { "Snake.png" };
 	
-	private static final Map<ESprite, ImageIcon> sprites;
-	private static BufferedImage bufferedImage; // The texture image
+	private static ResourceManager resourceManager;
 	
-	public static ImageIcon getSprite(ESprite sprite)
+	public static ResourceManager create(int textureTileSize, int fieldTileSize)
 	{
-		return sprites.get(sprite);
+		if (resourceManager == null)
+		{
+			resourceManager = new ResourceManager(textureTileSize, fieldTileSize);
+		}
+		return resourceManager;
 	}
 	
-	// Initialise the resource manager, fill the map with sprites
-	static
+	public static ResourceManager get()
 	{
-		try
+		if (resourceManager == null)
 		{
-			// Load the texture from the file
-			bufferedImage = ImageIO.read(new File(TEXTURE_FILE));
+			throw new ResourceManagerNotInitialisedException("Attempt to get a resource manager (Snake) without creating one");
 		}
-		catch (IOException e)
-		{
-			System.out.println("Error: couldn't open a texture file");
-		}
-		
-		// Create and fill the map
-		sprites = new HashMap<>();
-		sprites.put(ESprite.GRASS, createImage(2, 7));
-		
-		sprites.put(ESprite.SNAKE_HEAD_UP, createImage(0, 0));
-		sprites.put(ESprite.SNAKE_HEAD_DOWN, createImage(1, 0));
-		sprites.put(ESprite.SNAKE_HEAD_LEFT, createImage(2, 0));
-		sprites.put(ESprite.SNAKE_HEAD_RIGHT, createImage(3, 0));
-		
-		sprites.put(ESprite.SNAKE_HEAD_BLINK_UP, createImage(0, 1));
-		sprites.put(ESprite.SNAKE_HEAD_BLINK_DOWN, createImage(1, 1));
-		sprites.put(ESprite.SNAKE_HEAD_BLINK_LEFT, createImage(2, 1));
-		sprites.put(ESprite.SNAKE_HEAD_BLINK_RIGHT, createImage(3, 1));
-		
-		sprites.put(ESprite.SNAKE_HEAD_READY_UP, createImage(0, 2));
-		sprites.put(ESprite.SNAKE_HEAD_READY_DOWN, createImage(1, 2));
-		sprites.put(ESprite.SNAKE_HEAD_READY_LEFT, createImage(2, 2));
-		sprites.put(ESprite.SNAKE_HEAD_READY_RIGHT, createImage(3, 2));
-		
-		sprites.put(ESprite.SNAKE_HEAD_READY_BLINK_UP, createImage(0, 3));
-		sprites.put(ESprite.SNAKE_HEAD_READY_BLINK_DOWN, createImage(1, 3));
-		sprites.put(ESprite.SNAKE_HEAD_READY_BLINK_LEFT, createImage(2, 3));
-		sprites.put(ESprite.SNAKE_HEAD_READY_BLINK_RIGHT, createImage(4, 3));
-		
-		sprites.put(ESprite.SNAKE_BODY_UP_DOWN, createImage(0, 5));
-		sprites.put(ESprite.SNAKE_BODY_LEFT_RIGHT, createImage(1, 5));
-		
-		sprites.put(ESprite.SNAKE_BODY_TURN_UP_RIGHT, createImage(0, 7));
-		sprites.put(ESprite.SNAKE_BODY_TURN_DOWN_RIGHT, createImage(0, 6));
-		sprites.put(ESprite.SNAKE_BODY_TURN_UP_LEFT, createImage(1, 7));
-		sprites.put(ESprite.SNAKE_BODY_TURN_DOWN_LEFT, createImage(1, 6));
-		
-		sprites.put(ESprite.SNAKE_TAIL_UP, createImage(0, 4));
-		sprites.put(ESprite.SNAKE_TAIL_DOWN, createImage(1, 4));
-		sprites.put(ESprite.SNAKE_TAIL_LEFT, createImage(2, 4));
-		sprites.put(ESprite.SNAKE_TAIL_RIGHT, createImage(3, 4));
-		
-		sprites.put(ESprite.APPLE, createImage(4, 0));
-		sprites.put(ESprite.ROTTEN_APPLE, createImage(4, 1));
-		sprites.put(ESprite.REVERSE_PILL, createImage(5, 0));
-		sprites.put(ESprite.SHIELD, createImage(6, 0));
-		sprites.put(ESprite.HAMMER, createImage(7, 0));
-		sprites.put(ESprite.WALL, createImage(3, 7));
-		
-		sprites.put(ESprite.NUM_ZERO, createImage(4, 5));
-		sprites.put(ESprite.NUM_ONE, createImage(5, 5));
-		sprites.put(ESprite.NUM_TWO, createImage(6, 5));
-		sprites.put(ESprite.NUM_THREE, createImage(7, 5));
-		sprites.put(ESprite.NUM_FOUR, createImage(4, 6));
-		sprites.put(ESprite.NUM_FIVE, createImage(5, 6));
-		sprites.put(ESprite.NUM_SIX, createImage(6, 6));
-		sprites.put(ESprite.NUM_SEVEN, createImage(7, 6));
-		sprites.put(ESprite.NUM_EIGHT, createImage(4, 7));
-		sprites.put(ESprite.NUM_NINE, createImage(5, 7));
-		
-		sprites.put(ESprite.SUCCESS, createImage(4, 4));
-		sprites.put(ESprite.FAILURE, createImage(5, 4));
-		sprites.put(ESprite.QUESTION, createImage(6, 4));
-		sprites.put(ESprite.SLASH, createImage(7, 4));
+		return resourceManager;
 	}
 	
-	// Can be used to extract a sprite from the whole texture
-	// x & y are set in the sprite coordinates, i.e. in pixel/TEXTURE_TILE_SIZE
-	private static ImageIcon createImage(int x, int y)
+	public ImageIcon getSprite(ESprite sprite)
 	{
-		return new ImageIcon(bufferedImage.getSubimage(x * TEXTURE_TILE_SIZE, y * TEXTURE_TILE_SIZE, TEXTURE_TILE_SIZE, TEXTURE_TILE_SIZE)
-										  .getScaledInstance(FIELD_TILE_SIZE, FIELD_TILE_SIZE, Image.SCALE_FAST));
+		return getSprite(sprite.toString());
+	}
+	
+	private ResourceManager(int textureTileSize, int fieldTileSize)
+	{
+		super(textureTileSize, fieldTileSize, TEXTURE_FILES);
+	}
+	
+	@Override
+	protected void initialise()
+	{
+		addSprite(ECommonSprite.NOTHING.toString(), 0, 2, 7);
+		
+		addSprite(ECommonSprite.SUCCESS.toString(), 0, 4, 4);
+		addSprite(ECommonSprite.FAILURE.toString(), 0, 5, 4);
+		addSprite(ECommonSprite.QUESTION.toString(), 0, 6, 4);
+		addSprite(ECommonSprite.SLASH.toString(), 0, 7, 4);
+		
+		addSprite(ECommonSprite.NUM_ZERO.toString(), 0, 4, 5);
+		addSprite(ECommonSprite.NUM_ONE.toString(), 0, 5, 5);
+		addSprite(ECommonSprite.NUM_TWO.toString(), 0, 6, 5);
+		addSprite(ECommonSprite.NUM_THREE.toString(), 0, 7, 5);
+		addSprite(ECommonSprite.NUM_FOUR.toString(), 0, 4, 6);
+		addSprite(ECommonSprite.NUM_FIVE.toString(), 0, 5, 6);
+		addSprite(ECommonSprite.NUM_SIX.toString(), 0, 6, 6);
+		addSprite(ECommonSprite.NUM_SEVEN.toString(), 0, 7, 6);
+		addSprite(ECommonSprite.NUM_EIGHT.toString(), 0, 4, 7);
+		addSprite(ECommonSprite.NUM_NINE.toString(), 0, 5, 7);
+		
+		addSprite(ESprite.SNAKE_HEAD_UP.toString(), 0, 0, 0);
+		addSprite(ESprite.SNAKE_HEAD_DOWN.toString(), 0, 1, 0);
+		addSprite(ESprite.SNAKE_HEAD_LEFT.toString(), 0, 2, 0);
+		addSprite(ESprite.SNAKE_HEAD_RIGHT.toString(), 0, 3, 0);
+		
+		addSprite(ESprite.SNAKE_HEAD_BLINK_UP.toString(), 0, 0, 1);
+		addSprite(ESprite.SNAKE_HEAD_BLINK_DOWN.toString(), 0, 1, 1);
+		addSprite(ESprite.SNAKE_HEAD_BLINK_LEFT.toString(), 0, 2, 1);
+		addSprite(ESprite.SNAKE_HEAD_BLINK_RIGHT.toString(), 0, 3, 1);
+		
+		addSprite(ESprite.SNAKE_HEAD_READY_UP.toString(), 0, 0, 2);
+		addSprite(ESprite.SNAKE_HEAD_READY_DOWN.toString(), 0, 1, 2);
+		addSprite(ESprite.SNAKE_HEAD_READY_LEFT.toString(), 0, 2, 2);
+		addSprite(ESprite.SNAKE_HEAD_READY_RIGHT.toString(), 0, 3, 2);
+		
+		addSprite(ESprite.SNAKE_HEAD_READY_BLINK_UP.toString(), 0, 0, 3);
+		addSprite(ESprite.SNAKE_HEAD_READY_BLINK_DOWN.toString(), 0, 1, 3);
+		addSprite(ESprite.SNAKE_HEAD_READY_BLINK_LEFT.toString(), 0, 2, 3);
+		addSprite(ESprite.SNAKE_HEAD_READY_BLINK_RIGHT.toString(), 0, 4, 3);
+		
+		addSprite(ESprite.SNAKE_BODY_UP_DOWN.toString(), 0, 0, 5);
+		addSprite(ESprite.SNAKE_BODY_LEFT_RIGHT.toString(), 0, 1, 5);
+		
+		addSprite(ESprite.SNAKE_BODY_TURN_UP_RIGHT.toString(), 0, 0, 7);
+		addSprite(ESprite.SNAKE_BODY_TURN_DOWN_RIGHT.toString(), 0, 0, 6);
+		addSprite(ESprite.SNAKE_BODY_TURN_UP_LEFT.toString(), 0, 1, 7);
+		addSprite(ESprite.SNAKE_BODY_TURN_DOWN_LEFT.toString(), 0, 1, 6);
+		
+		addSprite(ESprite.SNAKE_TAIL_UP.toString(), 0, 0, 4);
+		addSprite(ESprite.SNAKE_TAIL_DOWN.toString(), 0, 1, 4);
+		addSprite(ESprite.SNAKE_TAIL_LEFT.toString(), 0, 2, 4);
+		addSprite(ESprite.SNAKE_TAIL_RIGHT.toString(), 0, 3, 4);
+		
+		addSprite(ESprite.APPLE.toString(), 0, 4, 0);
+		addSprite(ESprite.ROTTEN_APPLE.toString(), 0, 4, 1);
+		addSprite(ESprite.REVERSE_PILL.toString(), 0, 5, 0);
+		addSprite(ESprite.SHIELD.toString(), 0, 6, 0);
+		addSprite(ESprite.HAMMER.toString(), 0, 7, 0);
+		
+		addSprite(ESprite.GRASS.toString(), 0, 2, 6);
+		addSprite(ESprite.WALL.toString(), 0, 3, 7);
+		
+		super.initialise();
 	}
 }

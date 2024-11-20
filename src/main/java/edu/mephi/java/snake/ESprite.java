@@ -1,10 +1,8 @@
 package edu.mephi.java.snake;
 
-// The enumberation of all the sprites in the texture
+// The enumeration of all the sprites in the texture (except those that are present in engine.ECommonSprite)
 public enum ESprite
 {
-	GRASS,
-	
 	// Snake
 	SNAKE_HEAD_UP,				SNAKE_HEAD_DOWN,				SNAKE_HEAD_LEFT,				SNAKE_HEAD_RIGHT,
 	SNAKE_HEAD_BLINK_UP,		SNAKE_HEAD_BLINK_DOWN,			SNAKE_HEAD_BLINK_LEFT,			SNAKE_HEAD_BLINK_RIGHT,
@@ -22,30 +20,5 @@ public enum ESprite
 	HAMMER,
 	
 	// Obstacles
-	WALL,
-	
-	// Numbers
-	NUM_ZERO, NUM_ONE, NUM_TWO, NUM_THREE, NUM_FOUR, NUM_FIVE, NUM_SIX, NUM_SEVEN, NUM_EIGHT, NUM_NINE,
-	
-	// Command characters
-	SUCCESS, FAILURE, QUESTION, SLASH;
-	
-	// Convert an integer to the corresponding sprite with the number
-	public static ESprite getNum(int num)
-	{
-		return switch (num)
-		{
-			case 0 -> NUM_ZERO;
-			case 1 -> NUM_ONE;
-			case 2 -> NUM_TWO;
-			case 3 -> NUM_THREE;
-			case 4 -> NUM_FOUR;
-			case 5 -> NUM_FIVE;
-			case 6 -> NUM_SIX;
-			case 7 -> NUM_SEVEN;
-			case 8 -> NUM_EIGHT;
-			case 9 -> NUM_NINE;
-			default -> QUESTION;
-		};
-	}
+	GRASS, WALL
 }
