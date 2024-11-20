@@ -1,8 +1,8 @@
-package edu.mephi.java.engine.tiles;
+package edu.mephi.java.snake.tiles;
 
-import edu.mephi.java.engine.ESprite;
-import edu.mephi.java.engine.Field;
-import edu.mephi.java.engine.ResourceManager;
+import edu.mephi.java.snake.ESprite;
+import edu.mephi.java.snake.Field;
+import edu.mephi.java.snake.ResourceManager;
 
 import javax.swing.*;
 

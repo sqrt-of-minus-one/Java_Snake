@@ -1,6 +1,6 @@
 package edu.mephi.java;
 
-import edu.mephi.java.engine.Game;
+import edu.mephi.java.snake.Game;
 
 import javax.swing.*;
 

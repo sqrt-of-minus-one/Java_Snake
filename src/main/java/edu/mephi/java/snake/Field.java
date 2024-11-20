@@ -1,6 +1,6 @@
-package edu.mephi.java.engine;
+package edu.mephi.java.snake;
 
-import edu.mephi.java.engine.tiles.*;
+import edu.mephi.java.snake.tiles.*;
 
 import java.util.Random;
 

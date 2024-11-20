@@ -1,6 +1,6 @@
-package edu.mephi.java.engine.tiles;
+package edu.mephi.java.snake.tiles;
 
-import edu.mephi.java.engine.Field;
+import edu.mephi.java.snake.Field;
 
 // The obstacle that the snake can collide with
 public abstract class Obstacle extends Tile

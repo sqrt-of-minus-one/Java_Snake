@@ -1,4 +1,4 @@
-package edu.mephi.java.engine.tiles;
+package edu.mephi.java.snake.tiles;
 
 // Is used mainly to describe the snake's body elements
 public enum EDoubleDirection

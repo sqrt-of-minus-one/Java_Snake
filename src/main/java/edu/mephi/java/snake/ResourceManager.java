@@ -1,4 +1,4 @@
-package edu.mephi.java.engine;
+package edu.mephi.java.snake;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

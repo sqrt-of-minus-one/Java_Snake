@@ -1,8 +1,8 @@
-package edu.mephi.java.engine.command;
+package edu.mephi.java.snake.command;
 
-import edu.mephi.java.engine.ESprite;
-import edu.mephi.java.engine.Game;
-import edu.mephi.java.engine.ResourceManager;
+import edu.mephi.java.snake.ESprite;
+import edu.mephi.java.snake.Game;
+import edu.mephi.java.snake.ResourceManager;
 
 import javax.swing.*;
 

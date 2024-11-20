@@ -1,4 +1,4 @@
-package edu.mephi.java.engine;
+package edu.mephi.java.snake;
 
 // The enumberation of all the sprites in the texture
 public enum ESprite
