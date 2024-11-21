@@ -1,19 +1,28 @@
 package edu.mephi.java.engine;
 
+import java.lang.ref.WeakReference;
+
 public abstract class AbstractField
 {
+	private final WeakReference<AbstractGame> game;
 	private final int sizeX, sizeY; // The field size
 	private final boolean loopedX, loopedY; // If the field is looped, we can move behind its edge and appear from the opposite one
 	
 	private final AbstractTile[][] tiles; // 1st index is X, 2nd index is Y
 	
-	public AbstractField(int sizeX, int sizeY, boolean loopedX, boolean loopedY)
+	public AbstractField(AbstractGame game, boolean loopedX, boolean loopedY)
 	{
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
+		this.game = new WeakReference<>(game);
+		sizeX = game.getSizeX();
+		sizeY = game.getSizeY();
 		this.loopedX = loopedX;
 		this.loopedY = loopedY;
 		tiles = new AbstractTile[sizeX][sizeY];
+	}
+	
+	public AbstractGame getGame()
+	{
+		return game.get();
 	}
 	
 	public int getSizeX()
@@ -35,6 +44,10 @@ public abstract class AbstractField
 	{
 		return loopedY;
 	}
+	
+	// Is called by the game when lost
+	public void onLose()
+	{}
 	
 	// If the field is looped, the coordinates can be out of the field range
 	public AbstractTile getTile(int x, int y)
