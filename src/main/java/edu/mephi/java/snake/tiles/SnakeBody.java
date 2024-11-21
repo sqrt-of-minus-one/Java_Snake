@@ -1,5 +1,7 @@
 package edu.mephi.java.snake.tiles;
 
+import edu.mephi.java.engine.EDirection;
+import edu.mephi.java.engine.EDoubleDirection;
 import edu.mephi.java.snake.ESprite;
 import edu.mephi.java.snake.Field;
 import edu.mephi.java.snake.ResourceManager;

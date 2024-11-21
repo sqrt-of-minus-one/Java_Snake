@@ -1,5 +1,6 @@
 package edu.mephi.java.snake.tiles;
 
+import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.Field;
 
 import javax.swing.*;

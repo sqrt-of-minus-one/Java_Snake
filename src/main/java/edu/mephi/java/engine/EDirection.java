@@ -1,4 +1,4 @@
-package edu.mephi.java.snake.tiles;
+package edu.mephi.java.engine;
 
 public enum EDirection
 {

@@ -3,7 +3,7 @@ package edu.mephi.java.snake;
 import edu.mephi.java.snake.command.Command;
 import edu.mephi.java.snake.command.EffectCommand;
 import edu.mephi.java.snake.command.SpawnCommand;
-import edu.mephi.java.snake.tiles.EDirection;
+import edu.mephi.java.engine.EDirection;
 
 import javax.swing.*;
 import java.awt.*;
