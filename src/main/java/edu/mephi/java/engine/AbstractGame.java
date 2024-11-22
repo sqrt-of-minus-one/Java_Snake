@@ -1,5 +1,7 @@
 package edu.mephi.java.engine;
 
+import edu.mephi.java.engine.command.AbstractCommand;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -15,6 +17,9 @@ public abstract class AbstractGame
 	private final int sizeX, sizeY; // The size of the field
 	private AbstractField field;
 	private boolean gameOver = false;
+	private AbstractCommand command = null; // The command that is currently being set up
+	private boolean commandStarted = false; // Whether a command is being set up at the moment
+	private boolean paused = false; // Whether the game is currenly paused
 	
 	private final AbstractResourceManager resourceManager;
 	
@@ -47,7 +52,67 @@ public abstract class AbstractGame
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				System.out.println("The " + e.getKeyChar() + " key is pressed");
+				if (!commandStarted)
+				{
+					switch (e.getKeyCode())
+					{
+						case KeyEvent.VK_SLASH -> startCommand();
+						case KeyEvent.VK_ESCAPE -> switchPause();
+						default -> controls(e);
+					}
+				}
+				// Entering a command
+				else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) // Back to game
+				{
+					resetCommand();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_ENTER) // Confirm a parameter or apply a command
+				{
+					if (command == null || command.getStatus() == AbstractCommand.EStatus.APPLIED)
+					{
+						// Cancel the entering of a command
+						resetCommand();
+					}
+					else
+					{
+						command.confirmParameter(); // Confirm the parameter
+						if (command.getStatus() == AbstractCommand.EStatus.COMPLETE) // Apply the command if the confirmed parameter was the last one
+						{
+							command.apply();
+							updateSprites();
+						}
+						command.draw(commandLabels, 0, resourceManager);
+					}
+				}
+				else if (command == null)
+				{
+					// Specify the command
+					command = createCommand(e);
+					if (command != null)
+					{
+						command.draw(commandLabels, 0, resourceManager);
+					}
+				}
+				else
+				{
+					switch (command.getStatus())
+					{
+						case WAITING -> command.setParameter(e);
+						case COMPLETE -> // If the command is complete, apply it
+						{
+							if (e.getKeyCode() == KeyEvent.VK_ENTER)
+							{
+								command.apply();
+								updateSprites();
+							}
+						}
+						case APPLIED -> resetCommand(); // if the command has been applied, go back to game
+					}
+					if (command != null)
+					{
+						command.draw(commandLabels, 0, resourceManager);
+					}
+				}
 			}
 		});
 		
@@ -143,6 +208,69 @@ public abstract class AbstractGame
 		}
 	}
 	
+	public void switchPause()
+	{
+		if (paused)
+		{
+			unpause();
+		}
+		else
+		{
+			pause();
+		}
+	}
+	
+	public void pause()
+	{
+		if (!paused)
+		{
+			drawEmptyCommand(resourceManager.getSprite(ECommonSprite.PAUSE));
+			paused = true;
+		}
+	}
+	
+	public void unpause()
+	{
+		if (paused)
+		{
+			drawEmptyCommand(resourceManager.getSprite(ECommonSprite.NOTHING));
+			paused = false;
+		}
+	}
+	
+	public boolean isPaused()
+	{
+		return paused;
+	}
+	
+	public void updateSprites()
+	{
+		updateField();
+		updateStatus();
+	}
+	
+	public void updateField()
+	{
+		for (int x = 0; x < sizeX; x++)
+		{
+			for (int y = 0; y < sizeY; y++)
+			{
+				fieldLabels[x][y].setIcon(field.getTile(x, y).getSprite());
+			}
+		}
+	}
+	
+	public abstract void updateStatus();
+	
+	protected JLabel[] getStatusLabels(int index)
+	{
+		return statusLabels[index];
+	}
+	
+	protected abstract void controls(KeyEvent event);
+	
+	protected abstract AbstractCommand createCommand(KeyEvent event);
+	
 	// Returns the list with the information about rows of status data
 	private static List<StatusRow> calculateStatusRows(int sizeX, int[] statusTilesCounts)
 	{
@@ -170,6 +298,36 @@ public abstract class AbstractGame
 			rows.add(new StatusRow(statusTilesCounts.length, sizeX - currentX));
 		}
 		return rows;
+	}
+	
+	private void startCommand()
+	{
+		if (!gameOver && !commandStarted)
+		{
+			pause();
+			commandStarted = true;
+			drawEmptyCommand(resourceManager.getSprite(ECommonSprite.SLASH));
+		}
+	}
+	
+	private void resetCommand()
+	{
+		command = null;
+		commandStarted = false;
+		unpause();
+	}
+	
+	// Fills the command labels with ECommonSprite.NOTHING
+	// The first command label is filled by `firstSprite`
+	// Calls the `repaint()` method
+	private void drawEmptyCommand(ImageIcon firstSprite)
+	{
+		commandLabels[0].setIcon(firstSprite);
+		for (int i = 1; i < commandLabels.length; i++)
+		{
+			commandLabels[i].setIcon(resourceManager.getSprite(ECommonSprite.NOTHING));
+		}
+		repaint();
 	}
 	
 	// Describes a row of the status data

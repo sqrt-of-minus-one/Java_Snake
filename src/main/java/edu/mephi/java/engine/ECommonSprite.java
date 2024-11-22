@@ -5,8 +5,8 @@ public enum ECommonSprite
 {
 	NOTHING,
 	
-	// Command characters
-	SLASH, QUESTION, SUCCESS, FAILURE, MINUS,
+	// Characters
+	SLASH, QUESTION, SUCCESS, FAILURE, MINUS, PAUSE,
 	
 	// Numbers
 	NUM_ZERO, NUM_ONE, NUM_TWO, NUM_THREE, NUM_FOUR, NUM_FIVE, NUM_SIX, NUM_SEVEN, NUM_EIGHT, NUM_NINE;

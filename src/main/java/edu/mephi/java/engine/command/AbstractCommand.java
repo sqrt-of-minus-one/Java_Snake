@@ -118,30 +118,12 @@ public abstract class AbstractCommand
 		{
 			startIndex = parameters[i].draw(labels, ++startIndex, resourceManager);
 		}
+		AbstractGame strongGame = game.get();
+		if (strongGame != null)
+		{
+			strongGame.repaint();
+		}
 		return startIndex;
-	}
-	
-	// Draw the slash
-	public static void drawEmpty(JLabel[] labels, AbstractResourceManager resourceManager)
-	{
-		if (labels.length < 1)
-		{
-			throw new CommandNoSpaceToDrawException("No space to draw the command slash");
-		}
-		labels[0].setIcon(resourceManager.getSprite(ECommonSprite.SLASH));
-		for (int i = 1; i < labels.length; i++)
-		{
-			labels[i].setIcon(resourceManager.getSprite(ECommonSprite.NOTHING));
-		}
-	}
-	
-	// Clear the command line
-	public static void drawNone(JLabel[] labels, AbstractResourceManager resourceManager)
-	{
-		for (JLabel label : labels)
-		{
-			label.setIcon(resourceManager.getSprite(ECommonSprite.NOTHING));
-		}
 	}
 	
 	protected abstract boolean apply_();
