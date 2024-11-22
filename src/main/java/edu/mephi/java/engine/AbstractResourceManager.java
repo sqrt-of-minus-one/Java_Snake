@@ -42,6 +42,22 @@ public abstract class AbstractResourceManager
 		return getSprite(sprite.toString());
 	}
 	
+	public ImageIcon getSprite(String sprite)
+	{
+		if (!initialised)
+		{
+			throw new ResourceManagerNotInitialisedException("Attempt to get a sprite from a resource manager that hasn't been initialised");
+		}
+		if (sprites.containsKey(sprite))
+		{
+			return sprites.get(sprite);
+		}
+		else
+		{
+			return sprites.get(ECommonSprite.QUESTION.toString());
+		}
+	}
+	
 	protected AbstractResourceManager(int textureTileSize, int fieldTileSize, String[] textureFiles)
 	{
 		this.textureTileSize = textureTileSize;
@@ -72,22 +88,6 @@ public abstract class AbstractResourceManager
 			}
 		}
 		initialised = true;
-	}
-	
-	protected ImageIcon getSprite(String sprite)
-	{
-		if (!initialised)
-		{
-			throw new ResourceManagerNotInitialisedException("Attempt to get a sprite from a resource manager that hasn't been initialised");
-		}
-		if (sprites.containsKey(sprite))
-		{
-			return sprites.get(sprite);
-		}
-		else
-		{
-			return sprites.get(ECommonSprite.QUESTION.toString());
-		}
 	}
 	
 	// Extracts a sprite from the texture with the specified index and adds it in the sprites map
