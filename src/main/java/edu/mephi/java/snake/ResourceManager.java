@@ -53,6 +53,7 @@ public class ResourceManager
 		addSprite(ECommonSprite.FAILURE.toString(), 0, 5, 4);
 		addSprite(ECommonSprite.MINUS.toString(), 0, 7, 3);
 		addSprite(ECommonSprite.PAUSE.toString(), 0, 6, 3);
+		addSprite(ECommonSprite.DOTS.toString(), 0, 6, 2);
 		
 		addSprite(ECommonSprite.NUM_ZERO.toString(), 0, 4, 5);
 		addSprite(ECommonSprite.NUM_ONE.toString(), 0, 5, 5);

@@ -9,13 +9,13 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 
-public abstract class AbstractGame
+public abstract class AbstractGame<Field extends AbstractField>
 	extends JPanel
 {
 	public static final Random RANDOM = new Random();
 	
 	private final int sizeX, sizeY; // The size of the field
-	private AbstractField field;
+	private Field field;
 	private boolean gameOver = false;
 	private AbstractCommand command = null; // The command that is currently being set up
 	private boolean commandStarted = false; // Whether a command is being set up at the moment
@@ -165,6 +165,8 @@ public abstract class AbstractGame
 			commandLabels[i] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
 			add(commandLabels[i]);
 		}
+		
+		updateSprites();
 	}
 	
 	public int getSizeX()
@@ -177,7 +179,7 @@ public abstract class AbstractGame
 		return sizeY;
 	}
 	
-	public AbstractField getField()
+	public Field getField()
 	{
 		return field;
 	}
@@ -190,13 +192,6 @@ public abstract class AbstractGame
 	public AbstractResourceManager getResourceManager()
 	{
 		return resourceManager;
-	}
-	
-	// Start of restart the game, and set a new field
-	public void restart(AbstractField field)
-	{
-		this.field = field;
-		gameOver = false;
 	}
 	
 	public void lose()
@@ -249,8 +244,21 @@ public abstract class AbstractGame
 		updateStatus();
 	}
 	
+	public void updateFieldSprite(int x, int y)
+	{
+		if (field != null)
+		{
+			fieldLabels[x][y].setIcon(field.getTile(x, y).getSprite());
+		}
+	}
+	
 	public void updateField()
 	{
+		if (field == null)
+		{
+			return;
+		}
+		
 		for (int x = 0; x < sizeX; x++)
 		{
 			for (int y = 0; y < sizeY; y++)
@@ -258,6 +266,7 @@ public abstract class AbstractGame
 				fieldLabels[x][y].setIcon(field.getTile(x, y).getSprite());
 			}
 		}
+		repaint();
 	}
 	
 	public abstract void updateStatus();
@@ -265,6 +274,15 @@ public abstract class AbstractGame
 	protected JLabel[] getStatusLabels(int index)
 	{
 		return statusLabels[index];
+	}
+	
+	// Start of restart the game, and set a new field
+	protected void restart(Field field)
+	{
+		this.field = field;
+		gameOver = false;
+		updateSprites();
+		unpause();
 	}
 	
 	protected abstract void controls(KeyEvent event);
@@ -315,6 +333,22 @@ public abstract class AbstractGame
 		command = null;
 		commandStarted = false;
 		unpause();
+	}
+	
+	protected void drawNumber(JLabel[] labels, int start, int end, int number)
+	{
+		if (number < 0)
+		{
+			labels[start++].setIcon(resourceManager.getSprite(ECommonSprite.MINUS));
+			number = -number;
+		}
+		for (int i = end - 1; i > start; i--) // i > start is not a mistake, the last digit is drawn separately
+		{
+			labels[i].setIcon(resourceManager.getSprite(ECommonSprite.getNum(number % 10)));
+			number /= 10;
+		}
+		labels[start].setIcon(resourceManager.getSprite(
+				number < 10 ? ECommonSprite.getNum(number) : ECommonSprite.DOTS));
 	}
 	
 	// Fills the command labels with ECommonSprite.NOTHING
