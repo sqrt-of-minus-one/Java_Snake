@@ -1,6 +1,6 @@
 package edu.mephi.java.engine;
 
-// Is used mainly to describe the snake's body elements
+// Can be used e.g. to describe the snake's body elements
 public enum EDoubleDirection
 {
 	UP_DOWN,

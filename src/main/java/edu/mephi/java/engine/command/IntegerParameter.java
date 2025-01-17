@@ -17,7 +17,7 @@ public class IntegerParameter
 	private int value; // The value of the parameter (including sign)
 	private boolean negative = false; // Whether the value is negative
 	
-	IntegerParameter(int min, int max, int digits)
+	public IntegerParameter(int min, int max, int digits)
 	{
 		super(TYPE);
 		if (max < min)
@@ -34,7 +34,7 @@ public class IntegerParameter
 		value = Math.max(0, min);
 	}
 	
-	IntegerParameter(int digits)
+	public IntegerParameter(int digits)
 	{
 		super(TYPE);
 		min = (int)Math.max(Integer.MIN_VALUE, -Math.pow(10, digits - 1) + 1);

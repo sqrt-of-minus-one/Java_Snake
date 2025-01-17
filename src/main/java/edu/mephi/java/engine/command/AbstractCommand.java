@@ -1,9 +1,8 @@
 package edu.mephi.java.engine.command;
 
-import edu.mephi.java.engine.AbstractGame;
-import edu.mephi.java.engine.AbstractResourceManager;
-import edu.mephi.java.engine.ECommonSprite;
+import edu.mephi.java.engine.*;
 import edu.mephi.java.engine.exception.CommandNoSpaceToDrawException;
+import edu.mephi.java.engine.AbstractGame;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -12,7 +11,11 @@ import java.lang.ref.WeakReference;
 // The base class for all the commands
 // A command can have some parameters (see the `AbstractParameter` class)
 // Before the command can be applied, all its parameters must be set (`setParameter()`) and confirmed (`confirmParameter()`)
-public abstract class AbstractCommand
+public abstract class AbstractCommand<
+		Game extends AbstractGame<Game, Field, Tile, Command>,
+		Field extends AbstractField<Game, Field, Tile, Command>,
+		Tile extends AbstractTile<Game, Field, Tile, Command>,
+		Command extends AbstractCommand<Game, Field, Tile, Command>>
 {
 	// Possible statuses of the command
 	public enum EStatus
@@ -25,18 +28,18 @@ public abstract class AbstractCommand
 	private final String sprite; // The icon of the command
 	private final AbstractParameter[] parameters;
 	private int currentParameterIndex = 0; // The index of the parameter that is waiting to be set
-	private final WeakReference<AbstractGame> game;
+	private final WeakReference<Game> game;
 	private Boolean result = null; // null if the command hasn't been applied yet
 	
 	// After creating a command, its parameters should be specified
-	public AbstractCommand(String sprite, AbstractParameter[] parameters, AbstractGame game)
+	public AbstractCommand(String sprite, AbstractParameter[] parameters, Game game)
 	{
 		this.sprite = sprite;
 		this.parameters = parameters;
 		this.game = new WeakReference<>(game);
 	}
 	
-	public AbstractGame getGame()
+	public Game getGame()
 	{
 		return game.get();
 	}
@@ -118,7 +121,7 @@ public abstract class AbstractCommand
 		{
 			startIndex = parameters[i].draw(labels, ++startIndex, resourceManager);
 		}
-		AbstractGame strongGame = game.get();
+		Game strongGame = game.get();
 		if (strongGame != null)
 		{
 			strongGame.repaint();

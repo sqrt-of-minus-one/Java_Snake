@@ -9,7 +9,12 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 
-public abstract class AbstractGame<Field extends AbstractField>
+// The base class for games
+public abstract class AbstractGame<
+		Game extends AbstractGame<Game, Field, Tile, Command>,
+		Field extends AbstractField<Game, Field, Tile, Command>,
+		Tile extends AbstractTile<Game, Field, Tile, Command>,
+		Command extends AbstractCommand<Game, Field, Tile, Command>>
 	extends JPanel
 {
 	public static final Random RANDOM = new Random();
@@ -17,9 +22,9 @@ public abstract class AbstractGame<Field extends AbstractField>
 	private final int sizeX, sizeY; // The size of the field
 	private Field field;
 	private boolean gameOver = false;
-	private AbstractCommand command = null; // The command that is currently being set up
+	private Command command = null; // The command that is currently being set up
 	private boolean commandStarted = false; // Whether a command is being set up at the moment
-	private boolean paused = false; // Whether the game is currenly paused
+	private boolean paused = false; // Whether the game is currently paused
 	
 	private final AbstractResourceManager resourceManager;
 	
@@ -40,6 +45,7 @@ public abstract class AbstractGame<Field extends AbstractField>
 		// The list describing the rows of the status data
 		List<StatusRow> statusRows = calculateStatusRows(sizeX, statusTilesCounts);
 		
+		// Configure the JPanel
 		setLayout(new GridLayout(sizeY + statusRows.size() + 1, sizeX, 0, 0));
 		setPreferredSize(new Dimension(sizeX * resourceManager.getFieldTileSize(),
 									   (sizeY + statusRows.size() + 1) * resourceManager.getFieldTileSize()));
@@ -68,7 +74,7 @@ public abstract class AbstractGame<Field extends AbstractField>
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_ENTER) // Confirm a parameter or apply a command
 				{
-					if (command == null || command.getStatus() == AbstractCommand.EStatus.APPLIED)
+					if (command == null || command.getStatus() == Command.EStatus.APPLIED)
 					{
 						// Cancel the entering of a command
 						resetCommand();
@@ -76,7 +82,7 @@ public abstract class AbstractGame<Field extends AbstractField>
 					else
 					{
 						command.confirmParameter(); // Confirm the parameter
-						if (command.getStatus() == AbstractCommand.EStatus.COMPLETE) // Apply the command if the confirmed parameter was the last one
+						if (command.getStatus() == Command.EStatus.COMPLETE) // Apply the command if the confirmed parameter was the last one
 						{
 							command.apply();
 							updateSprites();
@@ -276,7 +282,7 @@ public abstract class AbstractGame<Field extends AbstractField>
 		return statusLabels[index];
 	}
 	
-	// Start of restart the game, and set a new field
+	// Start or restart the game, and set a new field
 	protected void restart(Field field)
 	{
 		this.field = field;
@@ -287,13 +293,13 @@ public abstract class AbstractGame<Field extends AbstractField>
 	
 	protected abstract void controls(KeyEvent event);
 	
-	protected abstract AbstractCommand createCommand(KeyEvent event);
+	protected abstract Command createCommand(KeyEvent event);
 	
 	// Returns the list with the information about rows of status data
 	private static List<StatusRow> calculateStatusRows(int sizeX, int[] statusTilesCounts)
 	{
 		List<StatusRow> rows = new LinkedList<>();
-		int currentX = 0; // How many tile have been put in the current row
+		int currentX = 0; // How many tiles have been put in the current row
 		boolean hasAny = false; // If there has been any status data
 		for (int i = 0; i < statusTilesCounts.length; i++)
 		{

@@ -12,10 +12,13 @@ import java.util.Map;
 public abstract class ListParameter
 	extends AbstractParameter
 {
+	public record Value(String value, String sprite)
+	{}
+	
 	private final Map<Integer /*keyCode*/, Value> values; // Possible parameter values
 	private Value value = null; // The current parameter value
 	
-	ListParameter(String type, Map<Integer /*keyCode*/, Value> values)
+	public ListParameter(String type, Map<Integer /*keyCode*/, Value> values)
 	{
 		super(type);
 		this.values = values;
@@ -63,7 +66,4 @@ public abstract class ListParameter
 				value == null ? ECommonSprite.QUESTION.toString() : value.sprite));
 		return startIndex + 1;
 	}
-	
-	protected record Value(String value, String sprite)
-	{}
 }

@@ -1,5 +1,6 @@
 package edu.mephi.java.engine;
 
+import edu.mephi.java.engine.exception.ResourceManagerFileNotOpen;
 import edu.mephi.java.engine.exception.ResourceManagerNoSpriteException;
 import edu.mephi.java.engine.exception.ResourceManagerNotInitialisedException;
 
@@ -52,10 +53,7 @@ public abstract class AbstractResourceManager
 		{
 			return sprites.get(sprite);
 		}
-		else
-		{
-			return sprites.get(ECommonSprite.QUESTION.toString());
-		}
+		return sprites.get(ECommonSprite.QUESTION.toString());
 	}
 	
 	protected AbstractResourceManager(int textureTileSize, int fieldTileSize, String[] textureFiles)
@@ -72,7 +70,7 @@ public abstract class AbstractResourceManager
 		}
 		catch (IOException e)
 		{
-			System.out.println("Error: couldn't open a texture file");
+			throw new ResourceManagerFileNotOpen("Couldn't open a texture file");
 		}
 	}
 	

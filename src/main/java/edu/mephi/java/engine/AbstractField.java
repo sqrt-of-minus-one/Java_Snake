@@ -1,26 +1,43 @@
 package edu.mephi.java.engine;
 
-import java.lang.ref.WeakReference;
+import edu.mephi.java.engine.command.AbstractCommand;
 
-public abstract class AbstractField
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractField<
+		Game extends AbstractGame<Game, Field, Tile, Command>,
+		Field extends AbstractField<Game, Field, Tile, Command>,
+		Tile extends AbstractTile<Game, Field, Tile, Command>,
+		Command extends AbstractCommand<Game, Field, Tile, Command>>
 {
-	private final WeakReference<AbstractGame> game;
+	private final WeakReference<Game> game;
 	private final int sizeX, sizeY; // The field size
 	private final boolean loopedX, loopedY; // If the field is looped, we can move behind its edge and appear from the opposite one
 	
-	private final AbstractTile[][] tiles; // 1st index is X, 2nd index is Y
+	private final List<List<Tile>> tiles; // 1st index is X, 2nd index is Y
 	
-	public AbstractField(AbstractGame game, boolean loopedX, boolean loopedY)
+	public AbstractField(Game game, boolean loopedX, boolean loopedY)
 	{
 		this.game = new WeakReference<>(game);
 		sizeX = game.getSizeX();
 		sizeY = game.getSizeY();
 		this.loopedX = loopedX;
 		this.loopedY = loopedY;
-		tiles = new AbstractTile[sizeX][sizeY];
+		tiles = new ArrayList<>(sizeX);
+		for (int x = 0; x < sizeX; x++)
+		{
+			List<Tile> column = new ArrayList<>(sizeY);
+			for (int y = 0; y < sizeY; y++)
+			{
+				column.add(null);
+			}
+			tiles.add(column);
+		}
 	}
 	
-	public AbstractGame getGame()
+	public Game getGame()
 	{
 		return game.get();
 	}
@@ -50,7 +67,7 @@ public abstract class AbstractField
 	{}
 	
 	// If the field is looped, the coordinates can be out of the field range
-	public AbstractTile getTile(int x, int y)
+	public Tile getTile(int x, int y)
 	{
 		if (x < 0)
 		{
@@ -76,10 +93,10 @@ public abstract class AbstractField
 			y %= sizeY;
 		}
 		
-		return tiles[x][y];
+		return tiles.get(x).get(y);
 	}
 	
-	public AbstractTile getNextTile(int x, int y, EDirection direction)
+	public Tile getNextTile(int x, int y, EDirection direction)
 	{
 		return switch (direction)
 		{
@@ -92,21 +109,21 @@ public abstract class AbstractField
 	
 	public void swapTiles(int fromX, int fromY, int toX, int toY)
 	{
-		AbstractTile tmp = tiles[fromX][fromY];
-		tiles[fromX][fromY] = tiles[toX][toY];
-		tiles[toX][toY] = tmp;
+		Tile tmp = tiles.get(fromX).get(fromY);
+		tiles.get(fromX).set(fromY, tiles.get(toX).get(toY));
+		tiles.get(toX).set(toY, tmp);
 	}
 	
 	// Replaces a random tile of the tileClass to replaceTo
-	public void replaceRandom(Class<AbstractTile> tileClass, AbstractTile replaceTo)
+	public void replaceRandom(Class<Tile> tileClass, Tile replaceTo)
 	{
 		int x, y;
 		do
 		{
 			// Not the best approach… I hope I'll change this one day
-			x = AbstractGame.RANDOM.nextInt(sizeX);
-			y = AbstractGame.RANDOM.nextInt(sizeY);
-		} while (!tileClass.isAssignableFrom(tiles[x][y].getClass()));
-		tiles[x][y] = replaceTo;
+			x = Game.RANDOM.nextInt(sizeX);
+			y = Game.RANDOM.nextInt(sizeY);
+		} while (!tileClass.isAssignableFrom(tiles.get(x).get(y).getClass()));
+		tiles.get(x).set(y, replaceTo);
 	}
 }
