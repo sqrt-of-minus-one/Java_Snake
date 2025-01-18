@@ -51,6 +51,7 @@ public abstract class AbstractCommand<
 	
 	// Applies the command
 	// The result is returned, you can access it later via the `getResult()` method
+	// Do not override this method, override apply_() instead
 	public boolean apply()
 	{
 		if (getStatus() == EStatus.COMPLETE)
@@ -127,6 +128,11 @@ public abstract class AbstractCommand<
 			strongGame.repaint();
 		}
 		return startIndex;
+	}
+	
+	protected AbstractParameter getParameter(int index)
+	{
+		return parameters[index];
 	}
 	
 	protected abstract boolean apply_();

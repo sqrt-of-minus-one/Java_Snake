@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 
 // The integer command parameter
 public class IntegerParameter
-	extends AbstractParameter
+	extends AbstractParameter<Integer>
 {
 	public static final String TYPE = "Integer";
 	private final int min, max; // Minimum and maximum values of the parameter
@@ -58,7 +58,8 @@ public class IntegerParameter
 		return digits;
 	}
 	
-	public int getValue()
+	@Override
+	public Integer getValue()
 	{
 		return value;
 	}

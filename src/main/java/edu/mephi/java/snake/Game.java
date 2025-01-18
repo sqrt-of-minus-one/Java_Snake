@@ -3,20 +3,15 @@ package edu.mephi.java.snake;
 import edu.mephi.java.engine.AbstractGame;
 import edu.mephi.java.engine.ECommonSprite;
 import edu.mephi.java.engine.command.AbstractCommand;
-import edu.mephi.java.snake.command.Command;
-import edu.mephi.java.snake.command.EffectCommand;
-import edu.mephi.java.snake.command.SpawnCommand;
 import edu.mephi.java.engine.EDirection;
+import edu.mephi.java.snake.command.Command;
+import edu.mephi.java.snake.tiles.Tile;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Game
-		extends AbstractGame<Field>
+		extends AbstractGame<Game, Field, Tile, Command>
 {
 	private final Timer moveTimer;
 	private static final int MOVE_TIME_MS = 500; // How often the snake moves

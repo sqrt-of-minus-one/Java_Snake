@@ -10,7 +10,7 @@ import java.util.Map;
 
 // The command parameter that can have one of the specified values
 public abstract class ListParameter
-	extends AbstractParameter
+	extends AbstractParameter<String>
 {
 	public record Value(String value, String sprite)
 	{}
@@ -53,6 +53,12 @@ public abstract class ListParameter
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String getValue()
+	{
+		return value.value;
 	}
 	
 	@Override

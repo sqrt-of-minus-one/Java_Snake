@@ -1,22 +1,24 @@
 package edu.mephi.java.snake.tiles;
 
+import edu.mephi.java.engine.AbstractTile;
 import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.Field;
+import edu.mephi.java.snake.Game;
+import edu.mephi.java.snake.command.Command;
 
 import javax.swing.*;
 
-// The basic class for the tiles
 public abstract class Tile
+	extends AbstractTile<Game, Field, Tile, Command>
 {
 	private int x, y; // The tile coordinates
-	private final Field field; // The field containing the tile
 	private int lifetime; // The time before the tile disappears (negative if the tile won't disappear
 	
 	public Tile(int x, int y, Field field, int lifetime)
 	{
+		super(field);
 		this.x = x;
 		this.y = y;
-		this.field = field;
 		this.lifetime = lifetime;
 	}
 	
@@ -34,11 +36,6 @@ public abstract class Tile
 	{
 		this.x = x;
 		this.y = y;
-	}
-	
-	public Field getField()
-	{
-		return field;
 	}
 	
 	// Is called by the snake when it moves

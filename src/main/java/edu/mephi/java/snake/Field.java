@@ -3,19 +3,18 @@ package edu.mephi.java.snake;
 import edu.mephi.java.engine.AbstractField;
 import edu.mephi.java.engine.AbstractGame;
 import edu.mephi.java.engine.EDirection;
+import edu.mephi.java.snake.command.Command;
 import edu.mephi.java.snake.tiles.*;
-
-import java.util.Random;
 
 // The field of the Snake game
 public class Field
-	extends AbstractField
+	extends AbstractField<Game, Field, Tile, Command>
 {
 	public static final double BONUS_PROB = .4; // The probability of an extra object generation
 	
 	private Snake snake;
 	
-	public Field(AbstractGame game)
+	public Field(Game game)
 	{
 		super(game, true, true);
 		

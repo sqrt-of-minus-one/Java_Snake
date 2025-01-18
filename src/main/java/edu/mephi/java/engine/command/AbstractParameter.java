@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 
 // The base class for the command parameters
-public abstract class AbstractParameter
+public abstract class AbstractParameter<T_Val>
 {
 	private final String type; // The name of the parameter type
 	private boolean confirmed = false; // After setting a value, you need to confirm it
@@ -40,6 +40,8 @@ public abstract class AbstractParameter
 	
 	// Try to confirm the parameter value (Enter is pressed)
 	public abstract boolean confirm();
+	
+	public abstract T_Val getValue();
 	
 	// Draw the value of the parameter on the labels
 	// Returns the first index of the `labels` where nothing has been drawn
