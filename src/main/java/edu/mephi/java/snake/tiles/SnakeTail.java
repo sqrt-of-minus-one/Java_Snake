@@ -47,14 +47,14 @@ public class SnakeTail
 	public ImageIcon getSprite()
 	{
 		// The sprite depends on the direction of the tail
-		return ResourceManager.getSprite(
-				switch (getDirection())
+		return getResourceManager().getSprite(
+				(switch (getDirection())
 				{
 					case UP -> ESprite.SNAKE_TAIL_UP;
 					case DOWN -> ESprite.SNAKE_TAIL_DOWN;
 					case LEFT -> ESprite.SNAKE_TAIL_LEFT;
 					case RIGHT -> ESprite.SNAKE_TAIL_RIGHT;
-				});
+				}).toString());
 	}
 	
 	public EDirection getDirection()

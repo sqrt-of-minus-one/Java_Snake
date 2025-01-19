@@ -7,10 +7,12 @@ import edu.mephi.java.snake.Field;
 // There are three types of snake tiles: head, body, and tail
 public abstract class SnakeTile extends Tile
 {
+	public static final int LIFETIME = -1;
+	
 	// To create a snake, use the constructor of the `SnakeHead` class
 	public SnakeTile(int x, int y, Field field)
 	{
-		super(x, y, field, -1);
+		super(x, y, field, LIFETIME);
 	}
 	
 	// Getters and setters for the neighbour snake tiles

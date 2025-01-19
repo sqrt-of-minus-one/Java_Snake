@@ -40,6 +40,7 @@ public class ResourceManager
 	private ResourceManager(int textureTileSize, int fieldTileSize)
 	{
 		super(textureTileSize, fieldTileSize, TEXTURE_FILES);
+		initialise();
 	}
 	
 	@Override

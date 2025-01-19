@@ -10,15 +10,23 @@ import javax.swing.*;
 public class ReversePill
 		extends Eatable
 {
+	public static final int LIFETIME = 100;
+	public static final int DELTA_SIZE = 0;
+	
+	public ReversePill(Field field)
+	{
+		super(field, LIFETIME, DELTA_SIZE);
+	}
+	
 	public ReversePill(int x, int y, Field field)
 	{
-		super(x, y, field, 100, 0);
+		super(x, y, field, LIFETIME, DELTA_SIZE);
 	}
 	
 	@Override
 	public ImageIcon getSprite()
 	{
-		return ResourceManager.getSprite(ESprite.REVERSE_PILL);
+		return getResourceManager().getSprite(ESprite.REVERSE_PILL.toString());
 	}
 	
 	@Override

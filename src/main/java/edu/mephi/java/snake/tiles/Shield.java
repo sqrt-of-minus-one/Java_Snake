@@ -10,17 +10,24 @@ import javax.swing.*;
 public class Shield
 		extends Eatable
 {
+	public static final int LIFETIME = 100;
+	public static final int DELTA_SIZE = 0;
 	public static final int SHIELD_DURATION = 30; // The movements before the shield stops protecting the snake
+	
+	public Shield(Field field)
+	{
+		super(field, LIFETIME, DELTA_SIZE);
+	}
 	
 	public Shield(int x, int y, Field field)
 	{
-		super(x, y, field, 100, 0);
+		super(x, y, field, LIFETIME, DELTA_SIZE);
 	}
 	
 	@Override
 	public ImageIcon getSprite()
 	{
-		return ResourceManager.getSprite(ESprite.SHIELD);
+		return getResourceManager().getSprite(ESprite.SHIELD.toString());
 	}
 	
 	@Override

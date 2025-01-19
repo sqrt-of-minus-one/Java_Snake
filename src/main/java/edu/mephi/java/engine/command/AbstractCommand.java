@@ -110,7 +110,7 @@ public abstract class AbstractCommand<
 	// Return the index of the first label where nothing has been drawn
 	public int draw(JLabel[] labels, int startIndex, AbstractResourceManager resourceManager)
 	{
-		if (startIndex + 2 < labels.length)
+		if (startIndex + 2 >= labels.length)
 		{
 			throw new CommandNoSpaceToDrawException("No space to draw the command icon");
 		}

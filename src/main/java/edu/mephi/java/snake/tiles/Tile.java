@@ -11,47 +11,34 @@ import javax.swing.*;
 public abstract class Tile
 	extends AbstractTile<Game, Field, Tile, Command>
 {
-	private int x, y; // The tile coordinates
 	private int lifetime; // The time before the tile disappears (negative if the tile won't disappear
 	
-	public Tile(int x, int y, Field field, int lifetime)
+	public Tile(Field field, int lifetime)
 	{
 		super(field);
-		this.x = x;
-		this.y = y;
 		this.lifetime = lifetime;
 	}
 	
-	public int getX()
+	public Tile(int x, int y, Field field, int lifetime)
 	{
-		return x;
-	}
-	
-	public int getY()
-	{
-		return y;
-	}
-	
-	public void setXY(int x, int y)
-	{
-		this.x = x;
-		this.y = y;
+		super(x, y, field);
+		this.lifetime = lifetime;
 	}
 	
 	// Is called by the snake when it moves
-	public void onMove()
+	public void onSnakeMove()
 	{
 		if (lifetime >= 0 && --lifetime == 0)
 		{
 			// Destroy the tile if it's time
-			field.setTile(x, y, new Grass(x, y, field));
+			getField().replaceTile(this, new Grass(getX(), getY(), getField()));
 		}
 	}
 	
 	// Get the neighbour tile
 	public Tile getNextTile(EDirection direction)
 	{
-		return field.getNextTile(this, direction);
+		return getField().getNextTile(this, direction);
 	}
 	
 	// If the tile is neighbour, returns the direction to it
@@ -75,7 +62,4 @@ public abstract class Tile
 		}
 		return null;
 	}
-	
-	// Returns the sprite for the tile
-	public abstract ImageIcon getSprite();
 }

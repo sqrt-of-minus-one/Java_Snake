@@ -5,6 +5,8 @@ import edu.mephi.java.engine.ECommonSprite;
 import edu.mephi.java.engine.command.AbstractCommand;
 import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.command.Command;
+import edu.mephi.java.snake.command.EffectCommand;
+import edu.mephi.java.snake.command.SpawnCommand;
 import edu.mephi.java.snake.tiles.Tile;
 
 import javax.swing.*;
@@ -128,15 +130,24 @@ public class Game
 					getField().getSnake().setDirection(EDirection.RIGHT);
 				}
 			}
+			case KeyEvent.VK_SPACE ->
+			{
+				if (field != null)
+				{
+					getField().moveSnake();
+				}
+			}
 			case KeyEvent.VK_R -> restart();
 		}
 	}
 	
 	@Override
-	protected AbstractCommand createCommand(KeyEvent event)
+	protected Command createCommand(KeyEvent event)
 	{
 		return switch (event.getKeyCode())
 		{
+			case KeyEvent.VK_S -> new SpawnCommand(this);
+			case KeyEvent.VK_E -> new EffectCommand(this);
 			default -> null;
 		};
 	}

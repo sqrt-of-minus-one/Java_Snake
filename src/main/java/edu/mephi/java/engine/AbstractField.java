@@ -66,6 +66,16 @@ public abstract class AbstractField<
 	public void onLose()
 	{}
 	
+	public boolean isGameOver()
+	{
+		return getGame().isGameOver();
+	}
+	
+	public List<List<Tile>> getTiles()
+	{
+		return tiles;
+	}
+	
 	// If the field is looped, the coordinates can be out of the field range
 	public Tile getTile(int x, int y)
 	{
@@ -96,6 +106,12 @@ public abstract class AbstractField<
 		return tiles.get(x).get(y);
 	}
 	
+	// Returns the tile with the exact coordinates without any checks
+	public Tile getExactTile(int x, int y)
+	{
+		return tiles.get(x).get(y);
+	}
+	
 	public Tile getNextTile(int x, int y, EDirection direction)
 	{
 		return switch (direction)
@@ -107,15 +123,115 @@ public abstract class AbstractField<
 		};
 	}
 	
+	public Tile getNextTile(Tile tile, EDirection direction)
+	{
+		if (tile == null || tile.getField() != this || !tile.isAlive())
+		{
+			return null;
+		}
+		
+		return getNextTile(tile.getX(), tile.getY(), direction);
+	}
+	
 	public void swapTiles(int fromX, int fromY, int toX, int toY)
 	{
-		Tile tmp = tiles.get(fromX).get(fromY);
-		tiles.get(fromX).set(fromY, tiles.get(toX).get(toY));
-		tiles.get(toX).set(toY, tmp);
+		Tile from = getExactTile(fromX, fromY);
+		Tile to = getExactTile(toX, toY);
+		setTile(fromX, fromY, to);
+		setTile(toX, toY, from);
+		if (from != null)
+		{
+			from.setXY(toX, toY);
+		}
+		if (to != null)
+		{
+			to.setXY(fromX, fromY);
+		}
+	}
+	
+	public boolean swapTiles(Tile from, Tile to)
+	{
+		if (from != null && from.getField() == this && from.isAlive() &&
+			  to != null &&   to.getField() == this &&   to.isAlive())
+		{
+			swapTiles(from.getX(), from.getY(), to.getX(), to.getY());
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean replaceTile(int x, int y, Tile newTile)
+	{
+		if (newTile != null && newTile.getField() == this && !newTile.isAlive())
+		{
+			Tile oldTile = getExactTile(x, y);
+			if (oldTile != null)
+			{
+				oldTile.setAlive(false);
+			}
+			setTile(x, y, newTile);
+			newTile.setXY(x, y);
+			newTile.setAlive(true);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean replaceTile(Tile oldTile, Tile newTile)
+	{
+		if (oldTile != null && oldTile.getField() == this && oldTile.isAlive())
+		{
+			return replaceTile(oldTile.getX(), oldTile.getY(), newTile);
+		}
+		return false;
+	}
+	
+	public boolean moveTile(int fromX, int fromY, int toX, int toY, Tile newTile)
+	{
+		if (newTile != null && newTile.getField() == this && !newTile.isAlive())
+		{
+			Tile to = getExactTile(toX, toY);
+			Tile from = getExactTile(fromX, fromY);
+			setTile(toX, toY, from);
+			setTile(fromX, fromY, newTile);
+			
+			newTile.setXY(fromX, fromY);
+			newTile.setAlive(true);
+			if (from != null)
+			{
+				from.setXY(toX, toY);
+			}
+			if (to != null)
+			{
+				to.setAlive(false);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean moveTile(Tile from, Tile to, Tile newTile)
+	{
+		if (from != null && from.getField() == this && from.isAlive() &&
+			  to != null &&   to.getField() == this &&   to.isAlive())
+		{
+			return moveTile(from.getX(), from.getY(), to.getX(), to.getY(), newTile);
+		}
+		return false;
+	}
+	
+	public boolean moveTile(int fromX, int fromY, EDirection direction, Tile newTile)
+	{
+		return moveTile(getExactTile(fromX, fromY), direction, newTile);
+	}
+	
+	public boolean moveTile(Tile from, EDirection direction, Tile newTile)
+	{
+		return moveTile(from, getNextTile(from, direction), newTile);
 	}
 	
 	// Replaces a random tile of the tileClass to replaceTo
-	public void replaceRandom(Class<Tile> tileClass, Tile replaceTo)
+	public void replaceRandom(Class<? extends Tile> tileClass, Tile newTile)
 	{
 		int x, y;
 		do
@@ -124,6 +240,11 @@ public abstract class AbstractField<
 			x = Game.RANDOM.nextInt(sizeX);
 			y = Game.RANDOM.nextInt(sizeY);
 		} while (!tileClass.isAssignableFrom(tiles.get(x).get(y).getClass()));
-		tiles.get(x).set(y, replaceTo);
+		replaceTile(x, y, newTile);
+	}
+	
+	protected void setTile(int x, int y, Tile tile)
+	{
+		tiles.get(x).set(y, tile);
 	}
 }

@@ -10,14 +10,21 @@ import javax.swing.*;
 public class Grass
 		extends Tile
 {
+	public static final int LIFETIME = -1;
+	
+	public Grass(Field field)
+	{
+		super(field, LIFETIME);
+	}
+	
 	public Grass(int x, int y, Field field)
 	{
-		super(x, y, field, -1);
+		super(x, y, field, LIFETIME);
 	}
 	
 	@Override
 	public ImageIcon getSprite()
 	{
-		return ResourceManager.getSprite(ESprite.GRASS);
+		return getResourceManager().getSprite(ESprite.GRASS.toString());
 	}
 }

@@ -10,15 +10,23 @@ import javax.swing.*;
 public class RottenApple
 		extends Eatable
 {
+	public static final int LIFETIME = 100;
+	public static final int DELTA_SIZE = -1;
+	
+	public RottenApple(Field field)
+	{
+		super(field, LIFETIME, DELTA_SIZE);
+	}
+	
 	public RottenApple(int x, int y, Field field)
 	{
-		super(x, y, field, 100, -1);
+		super(x, y, field, LIFETIME, DELTA_SIZE);
 	}
 	
 	@Override
 	public ImageIcon getSprite()
 	{
-		return ResourceManager.getSprite(ESprite.ROTTEN_APPLE);
+		return getResourceManager().getSprite(ESprite.ROTTEN_APPLE.toString());
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package edu.mephi.java.snake.tiles;
 
+import edu.mephi.java.engine.ECommonSprite;
 import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.ESprite;
 import edu.mephi.java.snake.Field;
@@ -66,8 +67,8 @@ public class SnakeHead
 	public void setBlink(boolean blink)
 	{
 		this.blink = blink;
-		getField().getGame().updateSprite(getX(), getY());
-		getField().getGame().repaint();
+		getGame().updateFieldSprite(getX(), getY());
+		getGame().repaint();
 	}
 	
 	@Override
@@ -76,7 +77,7 @@ public class SnakeHead
 		// Return a failure sign if the game is over
 		if (getField().getGame().isGameOver())
 		{
-			return ResourceManager.getSprite(ESprite.FAILURE);
+			return getResourceManager().getSprite(ECommonSprite.FAILURE);
 		}
 		
 		// Each direction has its own sprite set
@@ -88,44 +89,44 @@ public class SnakeHead
 		{
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.UP).getClass()))
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_READY_BLINK_UP : ESprite.SNAKE_HEAD_READY_UP);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_UP : ESprite.SNAKE_HEAD_READY_UP).toString());
 			}
 			else
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_BLINK_UP : ESprite.SNAKE_HEAD_UP);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_UP : ESprite.SNAKE_HEAD_UP).toString());
 			}
 		}
 		case DOWN:
 		{
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.DOWN).getClass()))
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_READY_BLINK_DOWN : ESprite.SNAKE_HEAD_READY_DOWN);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_DOWN : ESprite.SNAKE_HEAD_READY_DOWN).toString());
 			}
 			else
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_BLINK_DOWN : ESprite.SNAKE_HEAD_DOWN);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_DOWN : ESprite.SNAKE_HEAD_DOWN).toString());
 			}
 		}
 		case LEFT:
 		{
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.LEFT).getClass()))
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_READY_BLINK_LEFT : ESprite.SNAKE_HEAD_READY_LEFT);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_LEFT : ESprite.SNAKE_HEAD_READY_LEFT).toString());
 			}
 			else
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_BLINK_LEFT : ESprite.SNAKE_HEAD_LEFT);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_LEFT : ESprite.SNAKE_HEAD_LEFT).toString());
 			}
 		}
 		case RIGHT:
 		{
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.RIGHT).getClass()))
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_READY_BLINK_RIGHT : ESprite.SNAKE_HEAD_READY_RIGHT);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_RIGHT : ESprite.SNAKE_HEAD_READY_RIGHT).toString());
 			}
 			else
 			{
-				return ResourceManager.getSprite(blink ? ESprite.SNAKE_HEAD_BLINK_RIGHT : ESprite.SNAKE_HEAD_RIGHT);
+				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_RIGHT : ESprite.SNAKE_HEAD_RIGHT).toString());
 			}
 		}
 		}
@@ -144,12 +145,7 @@ public class SnakeHead
 	public void move(EDirection direction)
 	{
 		// Move the head to the next tile
-		Tile nextTile = getNextTile(direction);
-		getField().moveTile(getX(), getY(), nextTile.getX(), nextTile.getY());
-		
-		// Create a new body segment and place it where the head used to be
 		next = new SnakeBody(getX(), getY(), getField(), this, next);
-		setXY(nextTile.getX(), nextTile.getY());
-		getField().setTile(next.getX(), next.getY(), next);
+		getField().moveTile(this, direction, next);
 	}
 }

@@ -1,10 +1,11 @@
 package edu.mephi.java.snake;
 
 import edu.mephi.java.engine.AbstractField;
-import edu.mephi.java.engine.AbstractGame;
 import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.command.Command;
 import edu.mephi.java.snake.tiles.*;
+
+import java.util.List;
 
 // The field of the Snake game
 public class Field
@@ -31,17 +32,17 @@ public class Field
 	public void moveSnake()
 	{
 		// The snake can't move when the game is over
-		if (game.isGameOver())
+		if (isGameOver())
 		{
 			return;
 		}
 		
 		snake.move();
-		for (int x = 0; x < width; x++)
+		for (List<Tile> tiles : getTiles())
 		{
-			for (int y = 0; y < height; y++)
+			for (Tile tile : tiles)
 			{
-				tiles[x][y].onMove();
+				tile.onSnakeMove();
 			}
 		}
 	}
@@ -49,8 +50,8 @@ public class Field
 	// Creates an apple in a random point; may also create an extra object
 	public void generateFood()
 	{
-		replaceRandomGrass(new Apple(0, 0, this));
-		if (random.nextDouble() <= BONUS_PROB)
+		replaceRandom(Grass.class, new Apple(0, 0, this));
+		if (Game.RANDOM.nextDouble() <= BONUS_PROB)
 		{
 			generateBonus();
 		}
@@ -59,14 +60,14 @@ public class Field
 	// Creates a wall in a random point
 	public void generateWall()
 	{
-		replaceRandomGrass(new Wall(0, 0, this));
+		replaceRandom(Grass.class, new Wall(0, 0, this));
 	}
 	
 	// Creates a random extra object in a random point
 	private void generateBonus()
 	{
-		replaceRandomGrass(
-				switch (random.nextInt(4))
+		replaceRandom(Grass.class,
+				switch (Game.RANDOM.nextInt(4))
 				{
 					case 0 -> new RottenApple(0, 0, this);
 					case 1 -> new ReversePill(0, 0, this);
@@ -79,11 +80,11 @@ public class Field
 	// Fills the whole field with the grass
 	private void fillGrass()
 	{
-		for (int i = 0; i < tiles.length; i++)
+		for (int i = 0; i < getTiles().size(); i++)
 		{
-			for (int j = 0; j < tiles[i].length; j++)
+			for (int j = 0; j < getTiles().get(i).size(); j++)
 			{
-				tiles[i][j] = new Grass(i, j, this);
+				replaceTile(i, j, new Grass(this));
 			}
 		}
 	}
@@ -93,10 +94,10 @@ public class Field
 	{
 		if (snake == null)
 		{
-			snake = new Snake(width / 2, height / 2, this, EDirection.RIGHT, 2);
+			snake = new Snake(getSizeX() / 2, getSizeY() / 2, this, EDirection.RIGHT, 2);
 			for (SnakeTile tile = snake.getHead(); tile != null; tile = tile.getNext())
 			{
-				tiles[tile.getX()][tile.getY()] = tile;
+				replaceTile(tile.getX(), tile.getY(), tile);
 			}
 		}
 	}

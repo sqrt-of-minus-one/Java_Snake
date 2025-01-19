@@ -35,23 +35,30 @@ public class SpawnCommand
 	@Override
 	protected boolean apply_()
 	{
-		if (isComplete())
+		if (!isComplete())
 		{
-			String spawnable = ((SpawnableParameter)getParameter(SPAWNABLE_PARAMETER_INDEX)).getValue();
-			int x = ((IntegerParameter)getParameter(X_PARAMETER_INDEX)).getValue();
-			int y = ((IntegerParameter)getParameter(Y_PARAMETER_INDEX)).getValue();
-			Tile tileToCreate = null;
-			
-				 if (spawnable.equals(ESprite.GRASS.toString()))		tileToCreate = new Grass(x, y, getGame().getField());
-			else if (spawnable.equals(ESprite.APPLE.toString()))		tileToCreate = new Apple(x, y, getGame().getField());
-			else if (spawnable.equals(ESprite.ROTTEN_APPLE.toString()))	tileToCreate = new RottenApple(x, y, getGame().getField());
-			else if (spawnable.equals(ESprite.REVERSE_PILL.toString()))	tileToCreate = new ReversePill(x, y, getGame().getField());
-			else if (spawnable.equals(ESprite.SHIELD.toString()))		tileToCreate = new Shield(x, y, getGame().getField());
-			else if (spawnable.equals(ESprite.HAMMER.toString()))		tileToCreate = new Hammer(x, y, getGame().getField());
-			else if (spawnable.equals(ESprite.WALL.toString()))			tileToCreate = new Wall(x, y, getGame().getField());
-			
-			return true;
+			return false;
 		}
-		return false;
+		
+		String spawnable = ((SpawnableParameter)getParameter(SPAWNABLE_PARAMETER_INDEX)).getValue();
+		int x = ((IntegerParameter)getParameter(X_PARAMETER_INDEX)).getValue();
+		int y = ((IntegerParameter)getParameter(Y_PARAMETER_INDEX)).getValue();
+		if (SnakeTile.class.isAssignableFrom(getGame().getField().getExactTile(x, y).getClass()))
+		{
+			return false;
+		}
+		
+		Tile tileToCreate = null;
+			 if (spawnable.equals(ESprite.GRASS.toString()))		tileToCreate = new Grass(getGame().getField());
+		else if (spawnable.equals(ESprite.APPLE.toString()))		tileToCreate = new Apple(getGame().getField());
+		else if (spawnable.equals(ESprite.ROTTEN_APPLE.toString()))	tileToCreate = new RottenApple(getGame().getField());
+		else if (spawnable.equals(ESprite.REVERSE_PILL.toString()))	tileToCreate = new ReversePill(getGame().getField());
+		else if (spawnable.equals(ESprite.SHIELD.toString()))		tileToCreate = new Shield(getGame().getField());
+		else if (spawnable.equals(ESprite.HAMMER.toString()))		tileToCreate = new Hammer(getGame().getField());
+		else if (spawnable.equals(ESprite.WALL.toString()))			tileToCreate = new Wall(getGame().getField());
+		
+		getGame().getField().replaceTile(x, y, tileToCreate);
+		
+		return true;
 	}
 }

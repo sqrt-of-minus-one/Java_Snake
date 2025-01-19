@@ -7,6 +7,12 @@ public abstract class Obstacle extends Tile
 {
 	private final boolean lostOnCollide; // Is the game over when the snake collides with the object
 	
+	public Obstacle(Field field, int lifetime, boolean lostOnCollide)
+	{
+		super(field, lifetime);
+		this.lostOnCollide = lostOnCollide;
+	}
+	
 	public Obstacle(int x, int y, Field field, int lifetime, boolean lostOnCollide)
 	{
 		super(x, y, field, lifetime);

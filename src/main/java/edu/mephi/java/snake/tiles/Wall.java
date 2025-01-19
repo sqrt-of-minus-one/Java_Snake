@@ -10,15 +10,23 @@ import javax.swing.*;
 public class Wall
 		extends Obstacle
 {
+	public static final int LIFETIME = 200;
+	public static final boolean LOST_ON_COLLIDE = true;
+	
+	public Wall(Field field)
+	{
+		super(field, LIFETIME, LOST_ON_COLLIDE);
+	}
+	
 	public Wall(int x, int y, Field field)
 	{
-		super(x, y, field, 200, true);
+		super(x, y, field, LIFETIME, LOST_ON_COLLIDE);
 	}
 	
 	@Override
 	public ImageIcon getSprite()
 	{
-		return ResourceManager.getSprite(ESprite.WALL);
+		return getResourceManager().getSprite(ESprite.WALL.toString());
 	}
 	
 	@Override

@@ -29,9 +29,9 @@ public class Snake
 		{
 			length = 2;
 		}
-		else if (length > (direction == EDirection.LEFT || direction == EDirection.RIGHT ? field.getWidth() : field.getHeight()))
+		else if (length > (direction == EDirection.LEFT || direction == EDirection.RIGHT ? field.getSizeX() : field.getSizeY()))
 		{
-			length = (direction == EDirection.LEFT || direction == EDirection.RIGHT ? field.getWidth() : field.getHeight());
+			length = (direction == EDirection.LEFT || direction == EDirection.RIGHT ? field.getSizeX() : field.getSizeY());
 		}
 		
 		this.field = field;
@@ -142,17 +142,15 @@ public class Snake
 			{
 				// If the snake has a shield, it eats its tail, but doesn't lose
 				SnakeBody nextBody = (SnakeBody)nextTile;
-				for (SnakeTile i = nextBody.getNext(); i != null; i = i.getNext())
+				field.moveTile(tail, nextBody, new Grass(field));
+				for (SnakeTile i = nextBody.getNext(); i != tail; i = i.getNext())
 				{
 					// Destroy snake tiles up to the tail
-					field.setTile(i.getX(), i.getY(), new Grass(i.getX(), i.getY(), field));
+					field.replaceTile(i, new Grass(field));
 					length--;
 				}
-				// Move tail in front of the head
-				field.setTile(nextBody.getX(), nextBody.getY(), tail);
-				tail.setXY(nextBody.getX(), nextTile.getY());
-				tail.setPrevious(nextBody.getPrevious());
 				nextBody.getPrevious().setNext(tail);
+				tail.setPrevious(nextBody.getPrevious());
 				shield = 0; // Reset the shield
 				move_(0);
 			}
@@ -177,12 +175,7 @@ public class Snake
 	public void reverse()
 	{
 		// Swap the head and the tail tiles
-		int newHeadX = tail.getX(), newHeadY = tail.getY();
-		int newTailX = head.getX(), newTailY = head.getY();
-		field.setTile(newTailX, newTailY, tail);
-		field.setTile(newHeadX, newHeadY, head);
-		head.setXY(newHeadX, newHeadY);
-		tail.setXY(newTailX, newTailY);
+		field.swapTiles(tail, head);
 		
 		SnakeTile tmp = head.getNext();
 		if (tmp != tail)
@@ -236,19 +229,12 @@ public class Snake
 			}
 		}
 		
-		SnakeTile oldTail = tail;
-		SnakeTile newTail = tail;
 		for (int i = 0; i < 1 - deltaSize; i++)
 		{
-			// Remove the tile
-			field.setTile(newTail.getX(), newTail.getY(), new Grass(newTail.getX(), newTail.getY(), field));
-			newTail = newTail.getPrevious();
+			field.moveTile(tail, tail.getPrevious(), new Grass(field));
+			tail.setPrevious(tail.getPrevious().getPrevious());
+			tail.getPrevious().setNext(tail);
 		}
-		// Move the tail
-		oldTail.setXY(newTail.getX(), newTail.getY());
-		oldTail.setPrevious(newTail.getPrevious());
-		oldTail.getPrevious().setNext(oldTail);
-		field.setTile(newTail.getX(), newTail.getY(), oldTail);
 	}
 	
 	private void move_(int deltaSize)
