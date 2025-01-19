@@ -24,9 +24,9 @@ public class Hammer
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.HAMMER.toString());
+		return ESprite.HAMMER.toString();
 	}
 	
 	@Override

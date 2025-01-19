@@ -23,8 +23,8 @@ public class Grass
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.GRASS.toString());
+		return ESprite.GRASS.toString();
 	}
 }

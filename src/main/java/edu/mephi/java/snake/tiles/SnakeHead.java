@@ -72,61 +72,71 @@ public class SnakeHead
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		// Return a failure sign if the game is over
-		if (getField().getGame().isGameOver())
-		{
-			return getResourceManager().getSprite(ECommonSprite.FAILURE);
-		}
-		
 		// Each direction has its own sprite set
 		// If the next tile is eatable, the snake opens its mouth ("ready" sprites)
 		// The snake can blink
 		switch (getDirection())
 		{
-		case UP:
+		case UP ->
 		{
+			if (getField().getGame().isGameOver())
+			{
+				return ESprite.SNAKE_HEAD_DEAD_UP.toString();
+			}
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.UP).getClass()))
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_UP : ESprite.SNAKE_HEAD_READY_UP).toString());
+				return (blink ? ESprite.SNAKE_HEAD_READY_BLINK_UP : ESprite.SNAKE_HEAD_READY_UP).toString();
 			}
 			else
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_UP : ESprite.SNAKE_HEAD_UP).toString());
+				return (blink ? ESprite.SNAKE_HEAD_BLINK_UP : ESprite.SNAKE_HEAD_UP).toString();
 			}
 		}
-		case DOWN:
+		case DOWN ->
 		{
+			if (getField().getGame().isGameOver())
+			{
+				return ESprite.SNAKE_HEAD_DEAD_DOWN.toString();
+			}
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.DOWN).getClass()))
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_DOWN : ESprite.SNAKE_HEAD_READY_DOWN).toString());
+				return (blink ? ESprite.SNAKE_HEAD_READY_BLINK_DOWN : ESprite.SNAKE_HEAD_READY_DOWN).toString();
 			}
 			else
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_DOWN : ESprite.SNAKE_HEAD_DOWN).toString());
+				return (blink ? ESprite.SNAKE_HEAD_BLINK_DOWN : ESprite.SNAKE_HEAD_DOWN).toString();
 			}
 		}
-		case LEFT:
+		case LEFT ->
 		{
+			if (getField().getGame().isGameOver())
+			{
+				return ESprite.SNAKE_HEAD_DEAD_LEFT.toString();
+			}
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.LEFT).getClass()))
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_LEFT : ESprite.SNAKE_HEAD_READY_LEFT).toString());
+				return (blink ? ESprite.SNAKE_HEAD_READY_BLINK_LEFT : ESprite.SNAKE_HEAD_READY_LEFT).toString();
 			}
 			else
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_LEFT : ESprite.SNAKE_HEAD_LEFT).toString());
+				return (blink ? ESprite.SNAKE_HEAD_BLINK_LEFT : ESprite.SNAKE_HEAD_LEFT).toString();
 			}
 		}
-		case RIGHT:
+		case RIGHT ->
 		{
+			if (getField().getGame().isGameOver())
+			{
+				return ESprite.SNAKE_HEAD_DEAD_RIGHT.toString();
+			}
 			if (Eatable.class.isAssignableFrom(getNextTile(EDirection.RIGHT).getClass()))
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_READY_BLINK_RIGHT : ESprite.SNAKE_HEAD_READY_RIGHT).toString());
+				return (blink ? ESprite.SNAKE_HEAD_READY_BLINK_RIGHT : ESprite.SNAKE_HEAD_READY_RIGHT).toString();
 			}
 			else
 			{
-				return getResourceManager().getSprite((blink ? ESprite.SNAKE_HEAD_BLINK_RIGHT : ESprite.SNAKE_HEAD_RIGHT).toString());
+				return (blink ? ESprite.SNAKE_HEAD_BLINK_RIGHT : ESprite.SNAKE_HEAD_RIGHT).toString();
 			}
 		}
 		}

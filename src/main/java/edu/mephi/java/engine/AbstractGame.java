@@ -254,7 +254,7 @@ public abstract class AbstractGame<
 	{
 		if (field != null)
 		{
-			fieldLabels[x][y].setIcon(field.getTile(x, y).getSprite());
+			fieldLabels[x][y].setIcon(resourceManager.getSprite(field.getTile(x, y).getSprite()));
 		}
 	}
 	
@@ -269,7 +269,7 @@ public abstract class AbstractGame<
 		{
 			for (int y = 0; y < sizeY; y++)
 			{
-				fieldLabels[x][y].setIcon(field.getTile(x, y).getSprite());
+				fieldLabels[x][y].setIcon(resourceManager.getSprite(field.getTile(x, y).getSprite()));
 			}
 		}
 		repaint();

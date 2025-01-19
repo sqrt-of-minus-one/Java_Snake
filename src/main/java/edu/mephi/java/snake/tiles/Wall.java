@@ -24,9 +24,9 @@ public class Wall
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.WALL.toString());
+		return ESprite.WALL.toString();
 	}
 	
 	@Override

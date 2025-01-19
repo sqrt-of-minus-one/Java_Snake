@@ -58,7 +58,7 @@ public abstract class AbstractTile<
 	}
 	
 	// Returns the sprite for the tile
-	public abstract ImageIcon getSprite();
+	public abstract String getSprite();
 	
 	// Is supposed to be invoked only by the Field class
 	protected void setXY(int x, int y)

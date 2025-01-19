@@ -24,9 +24,9 @@ public class RottenApple
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.ROTTEN_APPLE.toString());
+		return ESprite.ROTTEN_APPLE.toString();
 	}
 	
 	@Override

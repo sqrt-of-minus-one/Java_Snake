@@ -80,10 +80,9 @@ public class SnakeBody
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(
-				(switch (getDirection())
+		return (switch (getDirection())
 				{
 					case UP_DOWN -> ESprite.SNAKE_BODY_UP_DOWN;
 					case LEFT_RIGHT -> ESprite.SNAKE_BODY_LEFT_RIGHT;
@@ -91,7 +90,7 @@ public class SnakeBody
 					case DOWN_RIGHT -> ESprite.SNAKE_BODY_TURN_DOWN_RIGHT;
 					case UP_LEFT -> ESprite.SNAKE_BODY_TURN_UP_LEFT;
 					case DOWN_LEFT -> ESprite.SNAKE_BODY_TURN_DOWN_LEFT;
-				}).toString());
+				}).toString();
 	}
 	
 	public EDoubleDirection getDirection()

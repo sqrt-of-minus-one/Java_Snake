@@ -24,9 +24,9 @@ public class ReversePill
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.REVERSE_PILL.toString());
+		return ESprite.REVERSE_PILL.toString();
 	}
 	
 	@Override

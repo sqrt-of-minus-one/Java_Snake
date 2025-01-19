@@ -24,9 +24,9 @@ public class Apple
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.APPLE.toString());
+		return ESprite.APPLE.toString();
 	}
 	
 	@Override

@@ -25,9 +25,9 @@ public class Shield
 	}
 	
 	@Override
-	public ImageIcon getSprite()
+	public String getSprite()
 	{
-		return getResourceManager().getSprite(ESprite.SHIELD.toString());
+		return ESprite.SHIELD.toString();
 	}
 	
 	@Override
