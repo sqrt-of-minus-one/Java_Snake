@@ -32,7 +32,7 @@ public class Field
 	public void moveSnake()
 	{
 		// The snake can't move when the game is over
-		if (isGameOver())
+		if (isGameOver() || getGame().isPaused())
 		{
 			return;
 		}

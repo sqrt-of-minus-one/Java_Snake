@@ -28,8 +28,9 @@ public abstract class AbstractGame<
 	
 	private final AbstractResourceManager resourceManager;
 	
-	// The window contains three areas:
+	// The window contains four areas:
 	private final JLabel[][] fieldLabels; // The main area is the game field itself
+	private final Map<EDirection, JLabel[]> frameLabels; // The frame around the field
 	private final JLabel[][] statusLabels; // The status area shows information like player score, health etc.
 	private final JLabel[] commandLabels; // The command area is used when a command is being typed
 	
@@ -43,12 +44,12 @@ public abstract class AbstractGame<
 		this.resourceManager = resourceManager;
 		
 		// The list describing the rows of the status data
-		List<StatusRow> statusRows = calculateStatusRows(sizeX, statusTilesCounts);
+		List<StatusRow> statusRows = calculateStatusRows(sizeX + 2, statusTilesCounts);
 		
 		// Configure the JPanel
-		setLayout(new GridLayout(sizeY + statusRows.size() + 1, sizeX, 0, 0));
-		setPreferredSize(new Dimension(sizeX * resourceManager.getFieldTileSize(),
-									   (sizeY + statusRows.size() + 1) * resourceManager.getFieldTileSize()));
+		setLayout(new GridLayout(sizeY + statusRows.size() + 3, sizeX + 2, 0, 0));
+		setPreferredSize(new Dimension((sizeX + 2) * resourceManager.getFieldTileSize(),
+									   (sizeY + statusRows.size() + 3) * resourceManager.getFieldTileSize()));
 		setAlignmentX(LEFT_ALIGNMENT);
 		setAlignmentY(TOP_ALIGNMENT);
 		setBackground(Color.DARK_GRAY);
@@ -122,15 +123,34 @@ public abstract class AbstractGame<
 			}
 		});
 		
-		// Create a field area
+		// Create field and frame areas
 		fieldLabels = new JLabel[sizeX][sizeY];
+		frameLabels = new EnumMap<>(EDirection.class);
+		frameLabels.put(EDirection.UP, new JLabel[sizeX + 2]);
+		frameLabels.put(EDirection.DOWN, new JLabel[sizeX + 2]);
+		frameLabels.put(EDirection.LEFT, new JLabel[sizeY]);
+		frameLabels.put(EDirection.RIGHT, new JLabel[sizeY]);
+		for (int x = 0; x < frameLabels.get(EDirection.UP).length; x++)
+		{
+			frameLabels.get(EDirection.UP)[x] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
+			add(frameLabels.get(EDirection.UP)[x]);
+		}
 		for (int y = 0; y < sizeY; y++)
 		{
+			frameLabels.get(EDirection.LEFT)[y] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
+			add(frameLabels.get(EDirection.LEFT)[y]);
 			for (int x = 0; x < sizeX; x++)
 			{
 				fieldLabels[x][y] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
 				add(fieldLabels[x][y]);
 			}
+			frameLabels.get(EDirection.RIGHT)[y] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
+			add(frameLabels.get(EDirection.RIGHT)[y]);
+		}
+		for (int x = 0; x < frameLabels.get(EDirection.DOWN).length; x++)
+		{
+			frameLabels.get(EDirection.DOWN)[x] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
+			add(frameLabels.get(EDirection.DOWN)[x]);
 		}
 		
 		// Create a status area
@@ -165,8 +185,8 @@ public abstract class AbstractGame<
 		}
 		
 		// Create a command area
-		commandLabels = new JLabel[sizeX];
-		for (int i = 0; i < sizeX; i++)
+		commandLabels = new JLabel[sizeX + 2];
+		for (int i = 0; i < commandLabels.length; i++)
 		{
 			commandLabels[i] = new JLabel(resourceManager.getSprite(ECommonSprite.NOTHING));
 			add(commandLabels[i]);
@@ -242,6 +262,30 @@ public abstract class AbstractGame<
 	public boolean isPaused()
 	{
 		return paused;
+	}
+	
+	public void showCoordinates()
+	{
+		for (int i = 1; i < frameLabels.get(EDirection.UP).length - 1; i++)
+		{
+			frameLabels.get(EDirection.UP)[i].setIcon(resourceManager.getSprite(ECommonSprite.getNum((i - 1) % 10)));
+		}
+		for (int i = 0; i < frameLabels.get(EDirection.LEFT).length; i++)
+		{
+			frameLabels.get(EDirection.LEFT)[i].setIcon(resourceManager.getSprite(ECommonSprite.getNum(i % 10)));
+		}
+	}
+	
+	public void hideCoordinates()
+	{
+		for (int i = 1; i < frameLabels.get(EDirection.UP).length - 1; i++)
+		{
+			frameLabels.get(EDirection.UP)[i].setIcon(resourceManager.getSprite(ECommonSprite.NOTHING));
+		}
+		for (int i = 0; i < frameLabels.get(EDirection.LEFT).length; i++)
+		{
+			frameLabels.get(EDirection.LEFT)[i].setIcon(resourceManager.getSprite(ECommonSprite.NOTHING));
+		}
 	}
 	
 	public void updateSprites()
@@ -331,6 +375,7 @@ public abstract class AbstractGame<
 			pause();
 			commandStarted = true;
 			drawEmptyCommand(resourceManager.getSprite(ECommonSprite.SLASH));
+			showCoordinates();
 		}
 	}
 	
@@ -338,6 +383,7 @@ public abstract class AbstractGame<
 	{
 		command = null;
 		commandStarted = false;
+		hideCoordinates();
 		unpause();
 	}
 	
