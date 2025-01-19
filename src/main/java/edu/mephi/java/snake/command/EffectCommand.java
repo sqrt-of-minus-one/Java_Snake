@@ -3,10 +3,7 @@ package edu.mephi.java.snake.command;
 import edu.mephi.java.engine.command.AbstractParameter;
 import edu.mephi.java.engine.command.IntegerParameter;
 import edu.mephi.java.snake.ESprite;
-import edu.mephi.java.snake.Game;
-import edu.mephi.java.snake.ResourceManager;
-
-import javax.swing.*;
+import edu.mephi.java.snake.SnakeGame;
 
 // Apply an effect for the snake
 public class EffectCommand extends Command
@@ -18,7 +15,7 @@ public class EffectCommand extends Command
 	// Parameters:
 	//   1 (Effect). The type of the effect that will be applied
 	//   2 (Number). The duration of the effect in snake movements
-	public EffectCommand(Game game)
+	public EffectCommand(SnakeGame game)
 	{
 		super(ESprite.SHIELD.toString(), new AbstractParameter[] {
 				new EffectParameter(),

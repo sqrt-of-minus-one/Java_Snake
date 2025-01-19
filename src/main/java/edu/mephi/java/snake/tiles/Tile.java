@@ -3,13 +3,11 @@ package edu.mephi.java.snake.tiles;
 import edu.mephi.java.engine.AbstractTile;
 import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.Field;
-import edu.mephi.java.snake.Game;
+import edu.mephi.java.snake.SnakeGame;
 import edu.mephi.java.snake.command.Command;
 
-import javax.swing.*;
-
 public abstract class Tile
-	extends AbstractTile<Game, Field, Tile, Command>
+	extends AbstractTile<SnakeGame, Field, Tile, Command>
 {
 	private int lifetime; // The time before the tile disappears (negative if the tile won't disappear
 	

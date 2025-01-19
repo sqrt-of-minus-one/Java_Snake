@@ -9,13 +9,13 @@ import java.util.List;
 
 // The field of the Snake game
 public class Field
-	extends AbstractField<Game, Field, Tile, Command>
+	extends AbstractField<SnakeGame, Field, Tile, Command>
 {
 	public static final double BONUS_PROB = .4; // The probability of an extra object generation
 	
 	private Snake snake;
 	
-	public Field(Game game)
+	public Field(SnakeGame game)
 	{
 		super(game, true, true);
 		
@@ -51,7 +51,7 @@ public class Field
 	public void generateFood()
 	{
 		replaceRandom(Grass.class, new Apple(0, 0, this));
-		if (Game.RANDOM.nextDouble() <= BONUS_PROB)
+		if (SnakeGame.RANDOM.nextDouble() <= BONUS_PROB)
 		{
 			generateBonus();
 		}
@@ -67,7 +67,7 @@ public class Field
 	private void generateBonus()
 	{
 		replaceRandom(Grass.class,
-				switch (Game.RANDOM.nextInt(4))
+				switch (SnakeGame.RANDOM.nextInt(4))
 				{
 					case 0 -> new RottenApple(0, 0, this);
 					case 1 -> new ReversePill(0, 0, this);

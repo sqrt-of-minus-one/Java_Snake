@@ -3,12 +3,8 @@ package edu.mephi.java.snake.command;
 import edu.mephi.java.engine.command.AbstractParameter;
 import edu.mephi.java.engine.command.IntegerParameter;
 import edu.mephi.java.snake.ESprite;
-import edu.mephi.java.snake.Game;
+import edu.mephi.java.snake.SnakeGame;
 import edu.mephi.java.snake.tiles.*;
-
-import javax.swing.*;
-
-import static edu.mephi.java.snake.ESprite.GRASS;
 
 // Spawn an object of the field
 public class SpawnCommand
@@ -23,7 +19,7 @@ public class SpawnCommand
 	//   1 (Spawnable). The type of the object that will be spawned
 	//   2 (Number). The X coordinate of the object
 	//   3 (Number). The Y coordinate of the object
-	public SpawnCommand(Game game)
+	public SpawnCommand(SnakeGame game)
 	{
 		super(ESprite.APPLE.toString(), new AbstractParameter[]{
 				new SpawnableParameter(),

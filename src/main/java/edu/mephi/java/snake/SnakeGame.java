@@ -2,7 +2,6 @@ package edu.mephi.java.snake;
 
 import edu.mephi.java.engine.AbstractGame;
 import edu.mephi.java.engine.ECommonSprite;
-import edu.mephi.java.engine.command.AbstractCommand;
 import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.snake.command.Command;
 import edu.mephi.java.snake.command.EffectCommand;
@@ -12,19 +11,19 @@ import edu.mephi.java.snake.tiles.Tile;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
-public class Game
-		extends AbstractGame<Game, Field, Tile, Command>
+public class SnakeGame
+		extends AbstractGame<SnakeGame, Field, Tile, Command>
 {
 	private final Timer moveTimer;
 	private static final int MOVE_TIME_MS = 500; // How often the snake moves
 	
 	private enum EStatusLabels
 	{
-		SCORE_ICON(0),
-		SCORE(1),
-		SHIELD(3);
+		// Indices
+		SCORE(0),
+		SHIELD(1);
 		
-		public static final int[] STATUS_LABELS_COUNTS = { 1, 3, 1, 1 };
+		public static final int[] STATUS_LABELS_COUNTS = { 4, 4 };
 		private final int index;
 		
 		EStatusLabels(int index)
@@ -38,10 +37,10 @@ public class Game
 		}
 	}
 	
-	public Game(int sizeX, int sizeY)
+	public SnakeGame(int sizeX, int sizeY)
 	{
 		super(sizeX, sizeY, ResourceManager.get(), EStatusLabels.STATUS_LABELS_COUNTS);
-		getStatusLabels(EStatusLabels.SCORE_ICON.getIndex())[0].setIcon(ResourceManager.get().getSprite(ESprite.APPLE));
+		getStatusLabels(EStatusLabels.SCORE.getIndex())[0].setIcon(ResourceManager.get().getSprite(ESprite.APPLE));
 		moveTimer = new Timer(MOVE_TIME_MS, _ ->
 		{
 			Field field = getField();
@@ -88,11 +87,23 @@ public class Game
 		{
 			drawNumber(
 					getStatusLabels(EStatusLabels.SCORE.getIndex()),
-					0,
-					EStatusLabels.STATUS_LABELS_COUNTS[EStatusLabels.SCORE.getIndex()],
+					1, EStatusLabels.STATUS_LABELS_COUNTS[EStatusLabels.SCORE.getIndex()],
 					field.getSnake().getLength() - 2);
-			getStatusLabels(EStatusLabels.SHIELD.getIndex())[0].setIcon(ResourceManager.get().getSprite(
-					field.getSnake().getShield() > 1 ? ESprite.SHIELD.toString() : ECommonSprite.NOTHING.toString()));
+			if (field.getSnake().getShield() > 0)
+			{
+				getStatusLabels(EStatusLabels.SHIELD.getIndex())[0].setIcon(ResourceManager.get().getSprite(ESprite.SHIELD));
+				drawNumber(
+						getStatusLabels(EStatusLabels.SHIELD.getIndex()),
+						1, EStatusLabels.STATUS_LABELS_COUNTS[EStatusLabels.SHIELD.getIndex()],
+						field.getSnake().getShield());
+			}
+			else
+			{
+				for (JLabel label : getStatusLabels(EStatusLabels.SHIELD.getIndex()))
+				{
+					label.setIcon(ResourceManager.get().getSprite(ECommonSprite.NOTHING));
+				}
+			}
 		}
 	}
 	
@@ -135,6 +146,8 @@ public class Game
 				if (field != null)
 				{
 					getField().moveSnake();
+					updateSprites();
+					moveTimer.restart();
 				}
 			}
 			case KeyEvent.VK_R -> restart();
