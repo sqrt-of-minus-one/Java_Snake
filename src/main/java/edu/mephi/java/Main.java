@@ -2,7 +2,7 @@ package edu.mephi.java;
 
 import edu.mephi.java.engine.AbstractGame;
 import edu.mephi.java.snake.SnakeGame;
-import edu.mephi.java.snake.ResourceManager;
+import edu.mephi.java.three.ThreeGame;
 
 import javax.swing.*;
 import java.util.InputMismatchException;
@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main
 {
-	public static final String[] GAME_NAMES = { "Snake" };
+	public static final String[] GAME_NAMES = { "Snake", "Three in row" };
 	public static final Scanner SCANNER = new Scanner(System.in);
 	
 	public static int askInt(String print, int min, int max)
@@ -52,8 +52,13 @@ public class Main
 		{
 			case 0 ->
 			{
-				ResourceManager.create(8, 8 * scaleFactor);
+				edu.mephi.java.snake.ResourceManager.create(8, 8 * scaleFactor);
 				game = new SnakeGame(askInt("Set the field size: X = ", 5, 100), askInt("Set the field size: Y = ", 5, 100));
+			}
+			case 1 ->
+			{
+				edu.mephi.java.three.ResourceManager.create(8, 8 * scaleFactor);
+				game = new ThreeGame(askInt("Set the field size: X = ", 5, 100), askInt("Set the field size: Y = ", 5, 100));
 			}
 		}
 		frame.add(game);
