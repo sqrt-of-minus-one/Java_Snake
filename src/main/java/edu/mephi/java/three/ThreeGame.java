@@ -5,11 +5,15 @@ import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.three.command.Command;
 import edu.mephi.java.three.tiles.Tile;
 
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 
 public class ThreeGame
 	extends AbstractGame<ThreeGame, Field, Tile, Command>
 {
+	private final Timer gravityTimer;
+	private static final int GRAVITY_TIME_MS = 500;
+	
 	private enum EStatusLabels
 	{
 		// Indices
@@ -33,12 +37,45 @@ public class ThreeGame
 	{
 		super(sizeX, sizeY, ResourceManager.get(), EStatusLabels.STATUS_LABELS_COUNTS);
 		getStatusLabels(EStatusLabels.SCORE.getIndex())[0].setIcon(ResourceManager.get().getSprite(ESprite.SPARK_PICKED));
+		gravityTimer = new Timer(GRAVITY_TIME_MS, _ ->
+		{
+			Field field = getField();
+			if (field == null || !field.fallAndFill())
+			{
+				stopGravity();
+			}
+			updateSprites();
+		});
 		restart();
 	}
 	
 	public void restart()
 	{
 		restart(new Field(this));
+	}
+	
+	public void stopGravity()
+	{
+		gravityTimer.stop();
+	}
+	
+	public void startGravity()
+	{
+		gravityTimer.restart();
+	}
+	
+	@Override
+	public void pause()
+	{
+		super.pause();
+		stopGravity();
+	}
+	
+	@Override
+	public void unpause()
+	{
+		super.unpause();
+		startGravity();
 	}
 	
 	@Override
@@ -61,6 +98,7 @@ public class ThreeGame
 				case KeyEvent.VK_LEFT, KeyEvent.VK_A -> getField().move(EDirection.LEFT);
 				case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> getField().move(EDirection.RIGHT);
 				case KeyEvent.VK_ENTER, KeyEvent.VK_SPACE -> getField().pick();
+				case KeyEvent.VK_R -> restart();
 			}
 		}
 	}

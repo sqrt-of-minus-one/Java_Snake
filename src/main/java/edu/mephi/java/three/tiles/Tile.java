@@ -12,4 +12,9 @@ public abstract class Tile
 	{
 		super(field);
 	}
+	
+	public Tile(int x, int y, Field field)
+	{
+		super(x, y, field);
+	}
 }

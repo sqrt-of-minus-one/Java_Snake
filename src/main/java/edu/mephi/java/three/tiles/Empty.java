@@ -11,6 +11,11 @@ public class Empty
 		super(field);
 	}
 	
+	public Empty(int x, int y, Field field)
+	{
+		super(x, y, field);
+	}
+	
 	@Override
 	protected String getPlainSprite()
 	{
