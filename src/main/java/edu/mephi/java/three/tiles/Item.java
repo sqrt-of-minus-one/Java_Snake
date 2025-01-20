@@ -14,25 +14,33 @@ public abstract class Item
 	}
 	
 	private final boolean gravity;
+	private final boolean movable;
 	private final EItemType itemType;
 	
-	public Item(Field field, boolean gravity, EItemType itemType)
+	public Item(Field field, boolean gravity, boolean movable, EItemType itemType)
 	{
 		super(field);
 		this.gravity = gravity;
+		this.movable = movable;
 		this.itemType = itemType;
 	}
 	
-	public Item(int x, int y, Field field, boolean gravity, EItemType itemType)
+	public Item(int x, int y, Field field, boolean gravity, boolean movable, EItemType itemType)
 	{
 		super(x, y, field);
 		this.gravity = gravity;
+		this.movable = movable;
 		this.itemType = itemType;
 	}
 	
 	public boolean getGravity()
 	{
 		return gravity;
+	}
+	
+	public boolean isMovable()
+	{
+		return movable;
 	}
 	
 	public EItemType getItemType()

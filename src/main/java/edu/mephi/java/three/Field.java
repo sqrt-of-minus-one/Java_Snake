@@ -1,6 +1,7 @@
 package edu.mephi.java.three;
 
 import edu.mephi.java.engine.AbstractFieldSelect;
+import edu.mephi.java.engine.EDirection;
 import edu.mephi.java.three.command.Command;
 import edu.mephi.java.three.tiles.*;
 
@@ -37,7 +38,7 @@ public class Field
 	
 	public Field(ThreeGame game)
 	{
-		super(game, true, false);
+		super(game, false, false);
 		fillEmpty();
 		generateWalls(WALLS_NUMBER);
 		game.startGravity();
@@ -46,6 +47,41 @@ public class Field
 	public int getScore()
 	{
 		return score;
+	}
+	
+	@Override
+	public void move(EDirection direction)
+	{
+		if (isPicked())
+		{
+			Tile selected = getSelectedTile();
+			Tile next = getNextTile(selected, direction);
+			if (selected != null && next != null &&
+					Item.class.isAssignableFrom(selected.getClass()) && ((Item)selected).isMovable() &&
+					(Item.class.isAssignableFrom(next.getClass()) && ((Item)next).isMovable() || Empty.class.isAssignableFrom(next.getClass())))
+			{
+				swapTiles(selected, next);
+				setSelectedXY(selected.getX(), selected.getY());
+				setPicked(false);
+				if (gravity())
+				{
+					getGame().startGravity();
+				}
+				else
+				{
+					swapTiles(selected, next);
+					setSelectedXY(selected.getX(), selected.getY());
+					setPicked(true);
+					getGame().updateFieldSprite(selected.getX(), selected.getY());
+					getGame().updateFieldSprite(next.getX(), next.getY());
+					getGame().repaint();
+				}
+			}
+		}
+		else
+		{
+			super.move(direction);
+		}
 	}
 	
 	public void pick()
@@ -72,9 +108,10 @@ public class Field
 		}
 	}
 	
-	public boolean fallAndFill()
+	public boolean gravity()
 	{
 		boolean needToContinue = false;
+		boolean changes = false;
 		for (int y = getSizeY() - 2; y >= 0; y--)
 		{
 			for (int x = 0; x < getSizeX(); x++)
@@ -86,6 +123,7 @@ public class Field
 					if (Item.class.isAssignableFrom(tile.getClass()) && ((Item)tile).getGravity())
 					{
 						swapTiles(tile, down);
+						changes = true;
 						if (y + 2 < getSizeY() && Empty.class.isAssignableFrom(getExactTile(x, y + 2).getClass()))
 						{
 							needToContinue = true;
@@ -115,12 +153,22 @@ public class Field
 						Item.class.isAssignableFrom(getExactTile(x, 2).getClass()) &&
 						((Item)getExactTile(x, 2)).getItemType() == newItem.getItemType());
 				replaceTile(tile, newItem);
+				changes = true;
 				needToContinue = true;
 			}
 		}
 		
 		System.out.println(needToContinue);
-		return needToContinue;
+		if (!needToContinue)
+		{
+			getGame().stopGravity();
+		}
+		
+		if (changes)
+		{
+			getGame().updateSprites();
+		}
+		return changes;
 	}
 	
 	private Item getRandomItem()

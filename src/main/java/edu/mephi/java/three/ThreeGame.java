@@ -40,11 +40,10 @@ public class ThreeGame
 		gravityTimer = new Timer(GRAVITY_TIME_MS, _ ->
 		{
 			Field field = getField();
-			if (field == null || !field.fallAndFill())
+			if (field != null)
 			{
-				stopGravity();
+				field.gravity();
 			}
-			updateSprites();
 		});
 		restart();
 	}

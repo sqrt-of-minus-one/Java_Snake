@@ -7,16 +7,17 @@ public class Wall
 	extends Item
 {
 	public static final boolean GRAVITY = false;
+	public static final boolean MOVABLE = false;
 	public static final EItemType ITEM_TYPE = null;
 	
 	public Wall(Field field)
 	{
-		super(field, GRAVITY, ITEM_TYPE);
+		super(field, GRAVITY, MOVABLE, ITEM_TYPE);
 	}
 	
 	public Wall(int x, int y, Field field)
 	{
-		super(x, y, field, GRAVITY, ITEM_TYPE);
+		super(x, y, field, GRAVITY, MOVABLE, ITEM_TYPE);
 	}
 	
 	@Override
